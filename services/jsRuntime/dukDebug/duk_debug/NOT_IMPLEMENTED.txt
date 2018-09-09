@@ -1,0 +1,65 @@
+// Not implemented / Removed for Neonious integration for now
+
+    app.get('/heapDump.json', this.handleHeapDumpGet.bind(this));
+
+DebugWebServer.prototype.handleHeapDumpGet = function (req, res) {
+    console.log('Heap dump get');
+
+    this.dbg.sendDumpHeapRequest().then(function (val) {
+        res.header('Content-Type', 'application/json');
+        //res.status(200).json(val);
+        res.status(200).send(JSON.stringify(val, null, 4));
+    }).catch(function (err) {
+        res.status(500).send('Failed to get heap dump: ' + (err.stack || err));
+    });
+};
+
+
+        // Poll various state items when running
+
+        var sendRound = 0;
+        var statusPending = false;
+        var bplistPending = false;
+        var localsPending = false;
+        var callStackPending = false;
+
+        setInterval(function () {
+            if (_this.execStatus.state !== 'running') {
+                return;
+            }
+
+            // Could also check for an empty request queue, but that's probably
+            // too strict?
+
+            // Pending flags are used to avoid requesting the same thing twice
+            // while a previous request is pending.  The flag-based approach is
+            // quite awkward.  Rework to use promises.
+
+            switch (sendRound) {
+                case 0:
+                    if (!statusPending) {
+                        statusPending = true;
+                        _this.sendStatusRequest().finally(function () { statusPending = false; });
+                    }
+                    break;
+                case 1:
+                    if (!bplistPending) {
+                        bplistPending = true;
+                        _this.sendBreakpointListRequest().finally(function () { bplistPending = false; });
+                    }
+                    break;
+                case 2:
+                    if (!localsPending) {
+                        localsPending = true;
+                        _this.sendGetLocalsRequest().finally(function () { localsPending = false; });
+                    }
+                    break;
+                case 3:
+                    if (!callStackPending) {
+                        callStackPending = true;
+                        _this.sendGetCallStackRequest().finally(function () { callStackPending = false; });
+                    }
+                    break;
+            }
+            sendRound = (sendRound + 1) % 4;
+        }, 500);
