@@ -4,15 +4,24 @@ import * as request from 'request-promise-native';
 import { injectable, inject } from "inversify";
 import { CancelToken, CancelledError } from "../../../common/cancelToken";
 import { HttpHandler } from "./handler";
+import * as https from 'https';
+
+const pool = new https.Agent({keepAlive:true});
 
 @injectable()
 export class HttpHandlerNode implements HttpHandler {
-    send({ method, url, params, headers, timeout, arrayBufferResponse, downloadProgress, uploadProgress, cancelToken }: HttpHandler.Options) {
+    send(options: HttpHandler.Options) {
+        const { method, url, params, headers, timeout, arrayBufferResponse, downloadProgress, uploadProgress, cancelToken } = options;
         // todo vollständiger und besser machen
         const encoding = arrayBufferResponse ? null : undefined; // https://stackoverflow.com/questions/37703518/how-to-post-binary-data-in-request-using-request-library
+        let time=Date.now();
+        function logTime(){
+            // console.log(`Request for`,method,url,params,'took this long:',(Date.now()-time)/1000,'s!');
+        }
         return {
             requestPromise: request({
                 method,
+                agent:pool,
                 uri: url,
                 // json: params,
                 headers,
@@ -21,6 +30,7 @@ export class HttpHandlerNode implements HttpHandler {
                 encoding,
                 resolveWithFullResponse: true
             }).then(response => {
+                logTime();
                 return {
                     get status() {
                         return response.statusCode;
@@ -33,6 +43,7 @@ export class HttpHandlerNode implements HttpHandler {
                     }
                 }
             }).catch((e) => {
+                logTime();
                 const code = e.statusCode;
                 if (e.name !== 'StatusCodeError') {
                     throw e;
