@@ -91,7 +91,7 @@ export namespace HttpApiTypes {
                 action: 'start';
                 file?: string;
             }
-            output: "FILE_NOT_FOUND" | "ALREADY_RUNNING" | undefined
+            output: "FILE_NOT_FOUND" | "ALREADY_RUNNING" | "UPDATING_SYS" | undefined
         }
         Status: {
             input: {
@@ -99,7 +99,7 @@ export namespace HttpApiTypes {
             }
             output: {
                 code: {
-                    status: 'running' | 'stopped' | 'paused'
+                    status: 'running' | 'stopped' | 'paused'|'updating_sys'
                 };
             }
         }
