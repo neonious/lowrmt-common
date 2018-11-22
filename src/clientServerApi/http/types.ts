@@ -89,7 +89,7 @@ export namespace HttpApiTypes {
         Start: {
             input: {
                 action: 'start';
-                file: string;
+                file?: string;
             }
             output: "FILE_NOT_FOUND" | "ALREADY_RUNNING" | undefined
         }
