@@ -1,12 +1,11 @@
-import { Observable, Subject } from "rxjs";
-import { isNumber, forOwn } from "lodash";
-import * as request from 'request-promise-native';
-import { injectable, inject } from "inversify";
-import { CancelToken, CancelledError } from "../../../common/cancelToken";
-import { HttpHandler } from "./handler";
+import * as http from 'http';
 import * as https from 'https';
+import { injectable } from "inversify";
+import * as request from 'request-promise-native';
+import { HttpHandler } from "./handler";
 
-const pool = new https.Agent({keepAlive:true});
+const httpsPool = new https.Agent({keepAlive:true});
+const httpPool = new http.Agent({keepAlive:true});
 
 @injectable()
 export class HttpHandlerNode implements HttpHandler {
@@ -21,7 +20,7 @@ export class HttpHandlerNode implements HttpHandler {
         return {
             requestPromise: request({
                 method,
-                agent:pool,
+                agent: url.startsWith('https') ? httpsPool : httpPool,
                 uri: url,
                 // json: params,
                 headers,
