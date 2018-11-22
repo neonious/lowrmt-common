@@ -10,5 +10,5 @@ export function configureContainerForWeb(container: Container, options: Configur
     container.bind<WebsocketFactory>(TYPES.WebsocketFactory).to(WebsocketFactoryWeb);
     container.bind<HttpHandler>(TYPES.HttpHandler).to(HttpHandlerWeb);
 
-    configureContainer(container as any/*else lowrmt repo will give compile error*/, options);
+    configureContainer(container as any/*else lowsync repo will give compile error*/, options);
 }
