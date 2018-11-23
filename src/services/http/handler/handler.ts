@@ -44,6 +44,7 @@ export namespace HttpHandler {
         readonly status: number;
         readonly responseText: string;
         readonly arrayBuffer: any;
+        readonly headers: any;
     }
 
     export const DEFAULT_TIMEOUT = 60000;

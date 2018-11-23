@@ -39,6 +39,9 @@ export class HttpHandlerNode implements HttpHandler {
                     },
                     get arrayBuffer() {
                         return response.body;
+                    },
+                    get headers(){
+                        return response.headers;
                     }
                 }
             }).catch((e) => {
@@ -56,6 +59,9 @@ export class HttpHandlerNode implements HttpHandler {
                     },
                     get arrayBuffer() {
                         throw new Error('arrayBuffer not available');
+                    },
+                    get headers(){
+                        throw new Error('headers not available');
                     }
                 }
             })

@@ -48,7 +48,8 @@ export class HttpHandlerWeb implements HttpHandler {
                         // need to lazy load because: Failed to read the 'responseText' property from 'XMLHttpRequest': The value is only accessible if the object's 'responseType' is '' or 'text' (was 'arraybuffer').
                         return request.responseText;
                     },
-                    arrayBuffer: request.response
+                    arrayBuffer: request.response,
+                    headers: request.getAllResponseHeaders()
                 });
             }
             request.onerror = (e) => {
