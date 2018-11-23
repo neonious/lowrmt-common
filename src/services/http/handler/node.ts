@@ -4,8 +4,8 @@ import { injectable } from "inversify";
 import * as request from 'request-promise-native';
 import { HttpHandler } from "./handler";
 
-const httpsPool = new https.Agent({keepAlive:true});
-const httpPool = new http.Agent({keepAlive:true});
+export const httpsPool = new https.Agent({keepAlive:true});
+export const httpPool = new http.Agent({keepAlive:true});
 
 @injectable()
 export class HttpHandlerNode implements HttpHandler {
