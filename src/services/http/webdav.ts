@@ -22,7 +22,7 @@ export class GetRequestError extends Error {
                 return `The file ${this.path} could not be found.`;
             }
             if (this.statusErr.toString()[0] === '5') {
-                return `The neonious one failed to load the file ${this.path}.`;
+                return `The microcontroller failed to load the file ${this.path}.`;
             }
         } else {
             return `The file ${this.path} could not be loaded. It may be corrupted.`;
