@@ -6,7 +6,7 @@ import { WebsocketFactory } from "./websocketFactory";
 @injectable()
 export class WebsocketFactoryNode implements WebsocketFactory {
     create(url: string) {
-        const socket = new WebSocketWs(url);
+        const socket = new WebSocketWs(url,{rejectUnauthorized:false});
         return new class implements IWebSocket {
             private msgDel: ((data: string) => void) | null = null;
             private closeDel: ((code: number) => void) | null = null;
