@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
 import * as findUp from 'find-up';
-import { join } from 'path';
+import { join,dirname } from 'path';
 
 export async function loadJsonFile<T>(file: string, def?: T): Promise<T> {
     if (!await fs.pathExists(file)) {
@@ -14,6 +14,7 @@ export async function loadJsonFile<T>(file: string, def?: T): Promise<T> {
 
 export async function saveJsonFile(file: string, obj: any) {
     const json = JSON.stringify(obj, null, 4);
+    await fs.mkdirp(dirname(file));
     await fs.writeFile(file, json, { encoding: 'utf8' });
 }
 
