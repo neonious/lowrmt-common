@@ -73,6 +73,11 @@ export function isValidationKey(key: string): key is ValidationKey {
 }
 
 export function getTranslation(key: ValidationKey, t: Translations) {
+    if (!validationDefs[key])
+    {
+        console.warn('MISSING VALIDATION KEY TRANSLATION', key);
+        return key;
+    }
     return validationDefs[key].translation(t);
 }
 

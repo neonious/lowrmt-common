@@ -101,35 +101,40 @@ export function getDotKeyMapping() {
 
 export function validateAll(key: SettingsKey, value: any, translations: Translations): string | true {
     const def = getDef(key);
-    const { validate } = def;
+    const { validate, allowNull } = def;
     if (validate) {
         const message = validate(value, translations);
         if (message)
             return message;
     }
-    const wrongDataTypeMsg = (dt: string) => `Wrong data type. Must be a ${dt}.`;
-    switch (def.$type) {
-        case 'boolean':
-            if (typeof value !== 'boolean') {
-                return wrongDataTypeMsg('boolean');
-            }
-            break;
-        case 'string':
-        case 'ip':
-        case 'password':
-        case 'fileinput':
-            if (typeof value !== 'string') {
-                return wrongDataTypeMsg('string');
-            }
-            break;
-        case 'number':
-            if (typeof value !== 'number') {
-                return wrongDataTypeMsg('number');
-            }
-            break;
+    if (value===null && !allowNull){
+        return 'Value must not be null';
+    }
+    if (value!==null){
+        const wrongDataTypeMsg = (dt: string) => `Wrong data type. Must be a ${dt}.`;
+        switch (def.$type) {
+            case 'boolean':
+                if (typeof value !== 'boolean') {
+                    return wrongDataTypeMsg('boolean');
+                }
+                break;
+            case 'string':
+            case 'ip':
+            case 'password':
+            case 'fileinput':
+                if (typeof value !== 'string') {
+                    return wrongDataTypeMsg('string');
+                }
+                break;
+            case 'number':
+                if (typeof value !== 'number') {
+                    return wrongDataTypeMsg('number');
+                }
+                break;
+        }
     }
     if ('regex' in def) {
-        if (def.regex && !def.regex.test(value)) {
+        if (def.regex && value && !def.regex.test(value)) {
             return 'Wrong format.';
         }
     }

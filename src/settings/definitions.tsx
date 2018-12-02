@@ -17,6 +17,7 @@ export type ConditionSelect = {
 } & Condition;
 
 type SettingDefBase = {
+    allowNull?:boolean;
     label: (trans: Translations) => string;
     description?: (trans: Translations) => string | React.ReactNode;
     validate?: (value: any, t: Translations) => string | undefined;
@@ -329,6 +330,37 @@ export const definitions = {
             $type: 'string',
             label: t => 'Main entry file',
         } as SettingDef
+    },
+    sdcard: {
+        sdcard__enabled:{
+            $type:'boolean',
+            label:t => 'Shall the SD card be mounted?'
+
+        }as SettingDef,
+        sdcard__mount:{
+            $type:'string',
+            label:t => 'The directory path under which the SD card shall be mounted, starting with /.'
+        }as SettingDef,
+        sdcard__mode:{
+            $type:'string',
+            label:t => 'spi - Slowest, most compatible. Pins configurable\nsd1line - Uses pins 2, 13, 14, 15, 21\nsd4line - Fastest mode, uses pins 2, 4, 12, 13, 14, 15, 21'
+        }as SettingDef,
+        sdcard__pinMISO:{
+            $type: 'number',
+            label:t => 'Pin number for MISO in SPI mode'
+    }as SettingDef,
+        sdcard__pinMOSI:{
+            $type: 'number',
+        label:t => 'Pin number for MOSI in SPI mode'
+    }as SettingDef,
+        sdcard__pinSCLK:{
+            $type: 'number',
+        label:t => 'Pin number for SCLK in SPI mode'
+    }as SettingDef, 
+        sdcard__pinCS:{
+            allowNull:true,
+            $type: 'number',
+        label:t => 'Pin number for CS in SPI mode. May be omitted.'}as SettingDef  
     }
 }
 
