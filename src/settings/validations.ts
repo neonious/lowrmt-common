@@ -66,6 +66,21 @@ export const validationDefs = {
     ONE_REQUIRED: {
         translation: t => 'HTTP or HTTPS must be enabled'
     } as ValidationData,
+    EXPECTED_BOOLEAN: {
+        translation: t => 'Must be true or false'
+    } as ValidationData,
+    NOT_ABSOLUTE_PATH: {
+        translation: t => 'Is not an absolute path beginning with \'/\''
+    } as ValidationData,
+    UNKNOWN_MODE: {
+        translation: t => 'Mode must be sd4line, sd1line or spi'
+    } as ValidationData,
+    NOT_A_NUMBER: {
+        translation: t => 'Must be an integer'
+    } as ValidationData,
+    NOT_A_ESP32_PIN: {
+        translation: t => 'Pin is not an ESP32 pin'
+    } as ValidationData
 }
 
 export function isValidationKey(key: string): key is ValidationKey {

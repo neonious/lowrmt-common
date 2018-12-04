@@ -335,7 +335,6 @@ export const definitions = {
         sdcard__enabled:{
             $type:'boolean',
             label:t => 'Shall the SD card be mounted?'
-
         }as SettingDef,
         sdcard__mount:{
             $type:'string',
@@ -348,19 +347,29 @@ export const definitions = {
         sdcard__pinMISO:{
             $type: 'number',
             label:t => 'Pin number for MISO in SPI mode'
-    }as SettingDef,
+        }as SettingDef,
         sdcard__pinMOSI:{
             $type: 'number',
-        label:t => 'Pin number for MOSI in SPI mode'
-    }as SettingDef,
+            label:t => 'Pin number for MOSI in SPI mode'
+        }as SettingDef,
         sdcard__pinSCLK:{
             $type: 'number',
-        label:t => 'Pin number for SCLK in SPI mode'
-    }as SettingDef, 
+            label:t => 'Pin number for SCLK in SPI mode'
+        }as SettingDef, 
         sdcard__pinCS:{
+            $type: 'number',
+            label:t => 'Pin number for CS in SPI mode. May be omitted.'
+        }as SettingDef, 
+        sdcard__pinCD:{
             allowNull:true,
             $type: 'number',
-        label:t => 'Pin number for CS in SPI mode. May be omitted.'}as SettingDef  
+            label:t => '' // todo setting description
+        }as SettingDef, 
+        sdcard__pinWP:{
+            allowNull:true,
+            $type: 'number',
+            label:t => '' // todo setting description
+        }as SettingDef
     }
 }
 
