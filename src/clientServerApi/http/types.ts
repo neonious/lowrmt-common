@@ -11,7 +11,7 @@ export interface PackageInfo {
 
 export namespace HttpApiTypes {
 
-    export type NoParams = 'Logout' | 'ResyncTime' | 'ClearLog';
+    export type NoParams = 'Logout' | 'ResyncTime' | 'ClearLog' | 'SetLowSyncHadPut';
 
     export namespace NoParams {
         export const Keys = keys<{ [K in NoParams]: void }>();
