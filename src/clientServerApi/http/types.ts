@@ -28,6 +28,7 @@ export namespace HttpApiTypes {
         };
         GetSoftwareVersion: {
             version: string;
+            noPassword?: boolean;
         }
         GetUpdateInfo: {
             update: false | {
