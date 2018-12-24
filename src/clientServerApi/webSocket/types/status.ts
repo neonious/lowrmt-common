@@ -16,6 +16,7 @@ export namespace Status {
                 readonly cid?: string;
                 readonly aid?: string;
                 readonly type?: string;
+                readonly compressed?:boolean;
             }
         }
 
