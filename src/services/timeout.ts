@@ -1,37 +1,24 @@
-import { TimeoutHandler } from "../hooks/timeout";
-import { injectable, inject } from 'inversify';
-import { TYPES } from '../types';
+let size = 0;
+const timeouts: Dict<boolean> = {};
 
-export interface TimeoutService {
-    setTimeout(id: string, timeout: boolean): void;
+export function setTimeoutForId(id: string, timeout: boolean) {
+  if (timeout) {
+    if (!timeouts[id]) {
+      timeouts[id] = true;
+      size++;
+      if (size === 1) handler && handler(true);
+    }
+  } else {
+    if (timeouts[id]) {
+      delete timeouts[id];
+      size--;
+      if (size === 0) handler && handler(false);
+    }
+  }
 }
 
-@injectable()
-export class TimeoutServiceImpl implements TimeoutService {
+let handler: ((timeout: boolean) => void) | undefined;
 
-    private size = 0;
-    private timeouts: Dict<boolean> = {};
-
-    constructor(
-        @inject(TYPES.TimeoutHandler) private timeoutHandler: TimeoutHandler
-    ) { }
-
-    setTimeout(id: string, timeout: boolean) {
-
-        if (timeout) {
-            if (!this.timeouts[id]) {
-                this.timeouts[id] = true;
-                this.size++;
-                if (this.size === 1)
-                    this.timeoutHandler.setTimeout(true);
-            }
-        } else {
-            if (this.timeouts[id]) {
-                delete this.timeouts[id];
-                this.size--;
-                if (this.size === 0)
-                    this.timeoutHandler.setTimeout(false);
-            }
-        }
-    }
+export function setTimeoutHandler(callback: (timeout: boolean) => void) {
+  handler = callback;
 }

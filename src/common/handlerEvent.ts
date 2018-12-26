@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs/Observable';
 
 export interface HandlerEvent<T> {
     add(func: (t: T) => void): () => void;

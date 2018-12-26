@@ -1,0 +1,302 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "PackageInfo": {
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "maxVersion": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "ClearLog": {
+            "type": "undefined"
+        },
+        "GetPackageInfos": {
+            "properties": {
+                "input": {
+                    "items": {
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "version": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "output": {
+                    "items": {
+                        "$ref": "#/definitions/PackageInfo"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "GetSettings": {
+            "properties": {
+                "output": {
+                    "properties": {
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "GetSoftwareVersion": {
+            "properties": {
+                "noSession": {
+                    "enum": [
+                        true
+                    ],
+                    "type": "boolean"
+                },
+                "output": {
+                    "properties": {
+                        "noPassword": {
+                            "type": "boolean"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "GetUpdateInfo": {
+            "properties": {
+                "output": {
+                    "properties": {
+                        "update": {
+                            "anyOf": [
+                                {
+                                    "properties": {
+                                        "changelog": {
+                                            "type": "string"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                {
+                                    "enum": [
+                                        false
+                                    ],
+                                    "type": "boolean"
+                                }
+                            ]
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "IsLoggedIn": {
+            "properties": {
+                "output": {
+                    "properties": {
+                        "loggedIn": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "PackageSearch": {
+            "properties": {
+                "input": {
+                    "properties": {
+                        "query": {
+                            "type": "string"
+                        },
+                        "startIndex": {
+                            "type": "number"
+                        }
+                    },
+                    "type": "object"
+                },
+                "output": {
+                    "items": {
+                        "$ref": "#/definitions/PackageInfo"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "ResyncTime": {
+            "type": "undefined"
+        },
+        "SetLowSyncHadPut": {
+            "type": "undefined"
+        },
+        "SetSettings": {
+            "properties": {
+                "input": {
+                    "properties": {
+                        "settings": {
+                            "properties": {
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "Start": {
+            "properties": {
+                "input": {
+                    "properties": {
+                        "action": {
+                            "enum": [
+                                "start"
+                            ],
+                            "type": "string"
+                        },
+                        "file": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "output": {
+                    "enum": [
+                        "ALREADY_RUNNING",
+                        "FILE_NOT_FOUND",
+                        "UPDATING_SYS"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Status": {
+            "properties": {
+                "input": {
+                    "properties": {
+                        "code": {
+                            "enum": [
+                                true
+                            ],
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
+                "output": {
+                    "properties": {
+                        "code": {
+                            "properties": {
+                                "status": {
+                                    "enum": [
+                                        "paused",
+                                        "running",
+                                        "stopped",
+                                        "updating_sys"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "Stop": {
+            "properties": {
+                "output": {
+                    "enum": [
+                        "NOT_RUNNING"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "UpdateAndLogout": {
+            "properties": {
+                "output": {
+                    "properties": {
+                        "willUpdate": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "UpdatePackage": {
+            "properties": {
+                "input": {
+                    "properties": {
+                        "command": {
+                            "enum": [
+                                "install",
+                                "remove"
+                            ],
+                            "type": "string"
+                        },
+                        "package": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "ValidateSettings": {
+            "properties": {
+                "input": {
+                    "properties": {
+                        "settings": {
+                            "properties": {
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "output": {
+                    "properties": {
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "type": "object"
+}
+

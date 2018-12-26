@@ -2,28 +2,17 @@
     "compilerOptions": {
         "strict": true,
         "outDir": "build",
+        "module": "esnext",
         "moduleResolution": "node",
         "removeComments": true,
         "lib": [
             "es6",
             "dom"
         ],
-        "target": "ES6",
+        "target": "ES2017",
         "rootDir": "src",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-		"baseUrl": "./src",
-		"paths": {
-			"@common/*": [
-				"common/*"
-			],
-			"@libservices/*": [
-				"services/*"
-			],
-			"@serverApi/*": [
-				"clientServerApi/*"
-			]
-        },
         "jsx": "react",
         "strictFunctionTypes": false // commented out cuz rxjs typings give compile error in virtualtimescheduler.d.ts. until they update their lib, no strictFunctionTypes for us
     }

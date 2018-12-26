@@ -1,53 +1,50 @@
-import { SessionService } from "./session";
-import { Subject, Observable } from "rxjs";
-import { HttpApiService } from "../http/api";
-import { AuthenticationEvents, AuthenticationEventsImpl } from "../../hooks/authentication";
-import { injectable, inject } from 'inversify';
-import { TYPES } from '../../types';
+import { setSession, clearSession } from "./session";
+import { HandlerEventHub } from "../../common/handlerEvent";
+import { postJson } from "../../http/mcHttp";
+import { beforeLogin, afterLogin, beforeLogout, afterLogout } from './events';
 
-export interface AuthenticationService {
-    tryLogin(password: string): Promise<boolean>;
-    logout(invalidSession?: boolean): Promise<void>;
-    setWasLoggedIn(session: string): void;
+let _isLoggedIn = false;
+
+export async function tryLogin(password: string) {
+  const result = await postJson<
+    | {
+        session: string;
+        err?: false;
+      }
+    | {
+        err: "PASSWORD_INVALID";
+      }
+  >({
+    noSession: true,
+    url: "/api/Login",
+    json: { password }
+  });
+  if (!result.err) {
+    await beforeLogin.fire(result.session);
+    setSession(result.session);
+    await afterLogin.fire(result.session);
+    _isLoggedIn = true;
+    return true;
+  }
+  return false;
 }
 
-@injectable()
-export class AuthenticationServiceImpl implements AuthenticationService {
+export async function setWasLoggedIn(session: string) {
+  await beforeLogin.fire(session);
+  setSession(session);
+  await afterLogin.fire(session);
+  _isLoggedIn = true;
+}
 
-    private _isLoggedIn = false;
-
-    constructor(
-        @inject(TYPES.HttpApiService) private httpApiService: HttpApiService,
-        @inject(TYPES.SessionService) private sessionService: SessionService,
-        @inject(TYPES.AuthenticationEvents) private authenticationEvents: AuthenticationEventsImpl) { }
-
-    async tryLogin(password: string) {
-        let result = await this.httpApiService.Login({ password });
-        if (!result.err) {
-            await this.authenticationEvents.beforeLogin.fire(result.session);
-            this.sessionService.setSession(result.session);
-            await this.authenticationEvents.afterLogin.fire(result.session);
-            this._isLoggedIn = true;
-            return true;
-        }
-        return false;
-    }
-
-    async setWasLoggedIn(session: string) {
-        await this.authenticationEvents.beforeLogin.fire(session);
-        this.sessionService.setSession(session);
-        await this.authenticationEvents.afterLogin.fire(session);
-        this._isLoggedIn = true;
-    }
-
-    async logout(logoutClientOnly = false) {
-        if (this._isLoggedIn) {
-            await this.authenticationEvents.beforeLogout.fire(void 0); // later
-            if (!logoutClientOnly)
-                await this.httpApiService.Logout();
-            this.sessionService.clearSession();
-            await this.authenticationEvents.afterLogout.fire(void 0);
-            this._isLoggedIn = false;
-        }
-    }
+export async function logout(logoutClientOnly = false) {
+  if (_isLoggedIn) {
+    await beforeLogout.fire(void 0); // later
+    if (!logoutClientOnly)
+      await postJson({
+        url: "/api/Logout"
+      });
+    clearSession();
+    await afterLogout.fire(void 0);
+    _isLoggedIn = false;
+  }
 }

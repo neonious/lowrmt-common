@@ -1,32 +1,20 @@
-import { injectable } from 'inversify';
+let _session: string | null = null;
 
-export interface SessionService {
-    getSessionOrDefault(): string | null;
-    getSession(): string;
-    setSession(session: string): void;
-    clearSession(): void;
+export function getSessionOrDefault(): string | null {
+  return _session;
 }
 
-@injectable()
-export class SessionServiceImpl implements SessionService {
-    private session: string | null = null;
+export function getSession(): string {
+  if (!_session) {
+    throw new Error("Session does not exist.");
+  }
+  return _session;
+}
 
-    getSessionOrDefault(): string | null {
-        return this.session;
-    }
+export function setSession(session: string): void {
+  _session = session;
+}
 
-    getSession(): string {
-        if (!this.session) {
-            throw new Error('Session does not exist.');
-        }
-        return this.session;
-    }
-
-    setSession(session: string): void {
-        this.session = session;
-    }
-
-    clearSession(): void {
-        this.session = null;
-    }
-} 
+export function clearSession(): void {
+  _session = null;
+}

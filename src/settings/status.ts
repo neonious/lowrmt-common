@@ -1,7 +1,7 @@
 import { SettingPageKey, SettingsKey } from './definitions';
 import { forOwn } from 'lodash';
 import { Translations } from '../translations/base/translations';
-import { Status } from '../clientServerApi/webSocket/types/status';
+import { Status } from '../webSocket/types/status';
 
 // later typescript suggestion make it possible to define a type where first level keys is a type and the subtype is just taken as is as another type
 
