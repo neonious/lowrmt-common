@@ -1,16 +1,16 @@
-import { CancelToken } from "../../common/cancelToken";
+import { CancelToken } from '../../common/cancelToken';
+import { debugLogTime } from '../../debugVars';
 // later default timeout options in IOC container
 
 export async function sendHttp(
   options: HttpHandler.Options
 ): Promise<HttpHandler.Response> {
-  const isNode = require("is-node");
-  if (isNode) {
-    const { sendNode } = await import("./node");
-    return await sendNode(options);
-  }
-  const { sendWeb } = await import("./web");
-  return await sendWeb(options);
+  const isNode = require('is-node');
+  const mod = (isNode ? await import('./node') : await import('./web')).default;
+  const start = Date.now();
+  const result = await mod(options);
+  debugLogTime(start, 'HTTP Request', options.method, options.url);
+  return result;
 }
 
 export namespace HttpHandler {

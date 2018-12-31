@@ -20,7 +20,7 @@ function progressCallback(
   }
 }
 
-export function sendWeb(options: HttpHandler.Options): HttpHandler.Result {
+export default function sendWeb(options: HttpHandler.Options): HttpHandler.Result {
   const {
     method,
     url,

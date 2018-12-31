@@ -9,7 +9,7 @@ const httpsPool = new https.Agent({
 });
 const httpPool = new http.Agent({ keepAlive: true });
 
-export function sendNode(options: HttpHandler.Options) {
+export default function sendNode(options: HttpHandler.Options) {
   const {
     method,
     url,
