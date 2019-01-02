@@ -1,4 +1,4 @@
-import { Translations } from "./base/translations";
+import { Translations } from "@common/translations/base/translations";
 
 export class GermanTranslations implements Translations {
 

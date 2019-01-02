@@ -113,6 +113,12 @@
         },
         "IsLoggedIn": {
             "properties": {
+                "noSession": {
+                    "enum": [
+                        true
+                    ],
+                    "type": "boolean"
+                },
                 "output": {
                     "properties": {
                         "loggedIn": {

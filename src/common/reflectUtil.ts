@@ -1,4 +1,4 @@
-import { CancellationTokenSource, CancelledError } from "./cancelToken";
+import { CancellationTokenSource, CancelledError } from "../common/cancelToken";
 
 export function createTryFinallyDecorator(callback: (args: any[]) => { beginFunc: () => void, endFunc: () => void }) {
     return function (target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>) {

@@ -1,4 +1,4 @@
-import { SettingPageKey, SettingsKey } from './definitions';
+import { SettingPageKey, SettingsKey } from '../settings/definitions';
 import { forOwn } from 'lodash';
 import { Translations } from '../translations/base/translations';
 import { Status } from '../webSocket/types/status';

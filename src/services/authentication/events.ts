@@ -1,4 +1,4 @@
-import { HandlerEventHub } from '../../common/handlerEvent';
+import { HandlerEventHub } from '@common/common/handlerEvent';
 
 export const beforeLogin = new HandlerEventHub<string>("beforeLogin");
 export const afterLogin = new HandlerEventHub<string>("afterLogin");

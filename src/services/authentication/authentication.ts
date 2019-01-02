@@ -1,7 +1,7 @@
-import { setSession, clearSession } from "./session";
-import { HandlerEventHub } from "../../common/handlerEvent";
-import { postJson } from "../../http/mcHttp";
-import { beforeLogin, afterLogin, beforeLogout, afterLogout } from './events';
+import { setSession, clearSession } from "@common/services/authentication/session";
+import { HandlerEventHub } from "@common/common/handlerEvent";
+import { postJson } from "@common/http/mcHttp";
+import { beforeLogin, afterLogin, beforeLogout, afterLogout } from '@common/services/authentication/events';
 
 let _isLoggedIn = false;
 

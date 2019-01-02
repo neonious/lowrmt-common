@@ -6,7 +6,7 @@ import { refCount } from "rxjs/operators/refCount";
 import { ReplaySubject } from "rxjs/ReplaySubject";
 import { Subject } from "rxjs/Subject";
 import { v4 } from "uuid";
-import { ObservableSocketImpl } from "./observableSocket";
+import { ObservableSocketImpl } from "../webSocket/observableSocket";
 import { onForbidden } from "../hooks/forbidden";
 import { setTimeoutForId } from "../services/timeout";
 

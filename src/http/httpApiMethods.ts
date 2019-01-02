@@ -14,6 +14,7 @@ export interface HttpMethods {
     output: {
       loggedIn: boolean;
     };
+    noSession:true;
   };
   UpdateAndLogout: {
     output: {

@@ -1,4 +1,4 @@
-import { Status } from './status';
+import { Status } from '@common/webSocket/types/status';
 
 export interface ScanWifi {
     [id: string]: {

@@ -1,19 +1,20 @@
 {
-    "compilerOptions": {
-        "strict": true,
-        "outDir": "build",
-        "module": "esnext",
-        "moduleResolution": "node",
-        "removeComments": true,
-        "lib": [
-            "es6",
-            "dom"
-        ],
-        "target": "ES2017",
-        "rootDir": "src",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "jsx": "react",
-        "strictFunctionTypes": false // commented out cuz rxjs typings give compile error in virtualtimescheduler.d.ts. until they update their lib, no strictFunctionTypes for us
+  "compilerOptions": {
+    "strict": true,
+    "outDir": "build",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "lib": ["es6", "dom"],
+    "target": "ES2017",
+    "rootDir": "src",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "strictFunctionTypes": false, // commented out cuz rxjs typings give compile error in virtualtimescheduler.d.ts. until they update their lib, no strictFunctionTypes for us
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["./src/*"]
     }
+  }
 }

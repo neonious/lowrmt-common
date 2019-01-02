@@ -1,13 +1,13 @@
 import { JSONSchema7 } from "json-schema";
 import { once } from "lodash";
-import { HttpMethods } from "./httpApiMethods";
-import { McHttpJsonOptions, postJson } from "./mcHttp";
+import { HttpMethods } from "@common/http/httpApiMethods";
+import { McHttpJsonOptions, postJson } from "@common/http/mcHttp";
 
 type AdditionApiOptions = Partial<McHttpJsonOptions>;
 
 export type HttpApiService = methods;
 
-const getInfo = once(async () => {
+export const getHttpMethodInfo = once(async () => {
   const obj = (await import("./schema.json")) as JSONSchema7;
 
   const noInputOrOutput = [];
@@ -65,7 +65,7 @@ export const httpApi = new Proxy(
   {
     get: function(target, method: string) {
       return async function(paramsOpts?: any, _options?: AdditionApiOptions) {
-        const { noParameterKeys, noSession } = await getInfo();
+        const { noParameterKeys, noSession } = await getHttpMethodInfo();
         const params = noParameterKeys.has(method) ? undefined : paramsOpts;
         const opts = noParameterKeys.has(method) ? paramsOpts : _options;
 

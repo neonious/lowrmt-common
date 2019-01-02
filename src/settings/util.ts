@@ -1,4 +1,4 @@
-import { definitions, SettingDef, SettingPageKey, SettingsKey } from './definitions';
+import { definitions, SettingDef, SettingPageKey, SettingsKey } from '../settings/definitions';
 import { forOwn, keys, cloneDeep } from 'lodash';
 import { Translations } from '../translations/base/translations';
 

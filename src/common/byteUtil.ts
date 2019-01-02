@@ -6,7 +6,7 @@ export function Uint8ToBase64(u8Arr: Uint8Array) {
     var slice;
     while (index < length) {
         slice = u8Arr.subarray(index, Math.min(index + CHUNK_SIZE, length));
-        result += String.fromCharCode.apply(null, slice);
+        result += String.fromCharCode.apply(null, slice as any);
         index += CHUNK_SIZE;
     }
     return btoa(result);
