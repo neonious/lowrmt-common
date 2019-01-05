@@ -15,6 +15,7 @@ export const getHttpMethodInfo = once(async () => {
   const onlyOutput = [];
   const inputAndOutput = [];
   const noSession = new Set<string>();
+  const internet = new Set<string>();
 
   const props = obj.properties!;
   const propKeys = Object.keys(props) as (keyof HttpMethods)[];
@@ -37,12 +38,15 @@ export const getHttpMethodInfo = once(async () => {
         if (subprops['noSession']) {
           noSession.add(method);
         }
+        if (subprops['internet']) {
+          internet.add(method);
+        }
       }
     }
   }
 
   const noParameterKeys = new Set(noInputOrOutput.concat(onlyOutput));
-  return { noParameterKeys, noSession };
+  return { noParameterKeys, noSession, internet };
 });
 
 type methods = {

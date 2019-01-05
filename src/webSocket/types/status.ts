@@ -1,5 +1,9 @@
 import { isUndefined } from "util";
-import { ConsoleLevel } from '../../services/consoleMessage/message';
+import { ConsoleLevel } from "../../services/consoleMessage/message";
+import {
+  PkgVersions,
+  AddRemove
+} from "@common/http/httpApiMethods";
 
 export namespace Status {
   export namespace FileEvent {
@@ -121,24 +125,31 @@ export namespace Status {
   export interface PkgMan {
     pkgman:
       | {
-          type: "fail";
-          package: string;
-          version: string;
-          command: "install" | "remove";
-        }
-      | {
-          type: "done";
-          package: string;
-          version: string;
-          command: "install" | "remove";
+          type: AddRemove;
+          id: string;
+          pkgs: string[];
         }
       | {
           type: "progress";
+          id: string;
           frac: number;
-          package: string;
-          version: string;
-          command: "install" | "remove";
+        }
+      | {
+          type: "fail";
+          id: string;
+          inconsistent?: boolean;
+          insufficientSpace?: boolean;
+          serverRawBody?:string;
+        }
+      | {
+          type: "done";
+          id: string;
+          finalPkgs: PkgVersions;
         };
+  }
+
+  export function isPkgMan(obj: Status): obj is PkgMan {
+    return !!(obj as PkgMan).pkgman;
   }
 
   export namespace Stats {
@@ -223,13 +234,7 @@ export namespace Status {
       }
     | { action: "start"; file: string }
     | { code: true }
-    | { status: true }
-    | {
-        pkgman: {
-          type: "clear_error";
-          id: string;
-        };
-      };
+    | { status: true };
 }
 
 export type Status = Status.FromServer;

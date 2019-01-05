@@ -1,3 +1,13 @@
+let _onCatchHttpError: ((err: any) => Promise<void>) | undefined;
+
+export async function onCatchHttpError(err: any) {
+  _onCatchHttpError && (await _onCatchHttpError(err));
+}
+
+export function setOnCatchHttpError(callback: (err: any) => Promise<void>) {
+  _onCatchHttpError = callback;
+}
+
 export function onForbidden(): void {
   _onForbidden && _onForbidden();
 }

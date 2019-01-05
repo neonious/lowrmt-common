@@ -1,4 +1,3 @@
-import { encodeFromText } from "@common/common/textUtil";
 
 export async function preparePostData(binData: Uint8Array, compiledBin: Uint8Array, mapBin: Uint8Array): Promise<{ buffer: Uint8Array, headers: Dict<string> }> {
 

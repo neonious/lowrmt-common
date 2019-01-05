@@ -1,20 +1,20 @@
+import { delay } from "@common/common/asyncUtil";
+import { CancelledError } from "@common/common/cancelToken";
+import {
+  getHostNameOrIp,
+  getPort,
+  getUseSsl,
+  onForbidden,
+  onCatchHttpError
+} from "@common/hooks/forbidden";
+import { HttpHandler, sendHttp } from "@common/http/handler/handler";
+import { McHttpError } from "@common/http/mcHttpError";
+import { setTimeoutForId } from "@common/services/timeout";
 import { Omit } from "type-zoo/types";
 import { v4 } from "uuid";
-import { delay } from "@common/common/asyncUtil";
-import { HttpHandler, sendHttp } from "@common/http/handler/handler";
-import { setTimeoutForId } from "@common/services/timeout";
-import {
-  onForbidden,
-  getPort,
-  getHostNameOrIp,
-  getUseSsl
-} from "@common/hooks/forbidden";
-import { McHttpError } from "@common/http/mcHttpError";
-import { CancelledError } from "@common/common/cancelToken";
-import { onError } from '@common/http/onError';
+import { HttpLikeOptions } from "./httpLike";
 
-interface BaseMcHttpOptions {
-  noSession?: boolean;
+interface BaseMcHttpOptions extends HttpLikeOptions {
   reject?: boolean;
 }
 
@@ -26,12 +26,13 @@ export interface McHttpJsonOptions
   json?: unknown;
 }
 
-function getHttpHostPrefix(): string {
+function getHttpHostPrefix({ ip, port, ssl }: McHttpOptions): string {
   const isNode = require("is-node");
   if (!isNode) return "";
-  return `${
-    getUseSsl() ? "https" : "http"
-  }://${getHostNameOrIp()}:${getPort()}`;
+  ip = ip || getHostNameOrIp();
+  port = port === undefined ? getPort() : port;
+  ssl = ssl === undefined ? getUseSsl() : ssl;
+  return `${ssl ? "https" : "http"}://${ip}:${port}`;
 }
 
 export function isOk(response: HttpHandler.Response) {
@@ -42,43 +43,101 @@ export function isReject(options: Pick<McHttpOptions, "reject">) {
   return typeof options.reject === "undefined" || options.reject;
 }
 
-let beforeHttp: Function | undefined;
-let afterHttp: Function | undefined;
+type BeforeHttpCallback = (options: McHttpOptions) => Promise<McHttpOptions>;
+type BeforeEachHttpCallback = (
+  options: McHttpOptions
+) => Promise<McHttpOptions>;
+type HttpSuccessCallback = (
+  options: McHttpOptions,
+  response: HttpHandler.Response
+) => Promise<void>;
+type HttpFailCallback = (
+  options: McHttpOptions,
+  error: McHttpError,
+  response?: HttpHandler.Response
+) => Promise<McHttpOptions | void>;
+type AfterHttpCallback = () => Promise<void>;
 
-export function setBeforeMcHttp(callback: Function) {
-  beforeHttp = callback;
+let before: BeforeHttpCallback | undefined;
+let beforeEach: BeforeEachHttpCallback | undefined;
+let success: HttpSuccessCallback | undefined;
+let fail: HttpFailCallback | undefined;
+let after: AfterHttpCallback | undefined;
+
+export function onBeforeHttp(callback: BeforeHttpCallback) {
+  before = callback;
 }
 
-export function setAfterMcHttp(callback: Function) {
-  afterHttp = callback;
+export function onBeforeEachHttp(callback: BeforeEachHttpCallback) {
+  beforeEach = callback;
 }
 
-export async function send({ noSession, ...options }: McHttpOptions) {
-  beforeHttp && beforeHttp();
-  let response: HttpHandler.Response | undefined;
-  let sessionObj;
-  if (!noSession) {
-    const {
-      getSession
-    } = await import("@common/services/authentication/session");
-    sessionObj = { SessionID: getSession() };
-  }
-  options = {
-    ...options,
-    url: `${getHttpHostPrefix()}${options.url}`,
-    headers: {
-      ...options.headers,
-      ...sessionObj
-    }
-  };
+export function onHttpSuccess(callback: HttpSuccessCallback) {
+  success = callback;
+}
+
+export function onHttpFail(callback: HttpFailCallback) {
+  fail = callback;
+}
+
+export function onAfterHttp(callback: AfterHttpCallback) {
+  after = callback;
+}
+
+export async function send(options: McHttpOptions) {
   const id = v4();
   try {
+    options = (before && (await before(options))) || options;
+
+    let response: HttpHandler.Response | undefined;
+
     let start = new Date().getTime();
 
     // todo timeouterror is only thrown if is web target (not node). also download and upload progress only for web atm
+
+    async function handleErrorRepeat(err: McHttpError) {
+      if (response) response.err = err;
+      if (response && response.status === 401) {
+        onForbidden();
+      }
+      if (fail) {
+        const newOptions = await fail(options, err, response);
+        if (newOptions) {
+          options = newOptions;
+          return true;
+        }
+      }
+      if (isReject(options)) throw err;
+      return false;
+    }
+
     while (true) {
+      options = (beforeEach && (await beforeEach(options))) || options;
+
+      const { noSession } = options;
+
+      let sessionObj;
+      if (!noSession) {
+        const {
+          getSession
+        } = await import("@common/services/authentication/session");
+        sessionObj = { SessionID: getSession() };
+      }
+
+      const httpOptions = {
+        ...options,
+        url: `${getHttpHostPrefix(options)}${options.url}`,
+        headers: {
+          ...options.headers,
+          ...sessionObj,
+          ...(options.password !== undefined
+            ? { Password: options.password }
+            : undefined)
+        }
+      };
+
       try {
-        response = await sendHttp(options);
+        response = await sendHttp(httpOptions);
       } catch (e) {
         if (e instanceof HttpHandler.TimeoutError) {
           setTimeoutForId(id, true);
@@ -89,33 +148,31 @@ export async function send({ noSession, ...options }: McHttpOptions) {
         } else if (e instanceof CancelledError) {
           throw e;
         } else {
-          throw new McHttpError(options, null, e);
+          const err = new McHttpError(options, null, e);
+          if (await handleErrorRepeat(err)) continue;
+          throw err;
         }
       }
       if (response) {
+        if (isOk(response)) {
+          success && (await success(options, response));
+        } else {
+          if (await handleErrorRepeat(new McHttpError(options, response)))
+            continue;
+        }
         break;
       }
     }
 
-    if (response.status === 401) {
-      onForbidden();
-    }
-
-    if (!isOk(response)) {
-      const err = new McHttpError(options, response);
-      response.err = err;
-      if (isReject(options)) throw err;
-    }
-
     return response;
   } catch (e) {
-    if (onError) {
-      onError(e, options, response);
+    if (!(e instanceof CancelledError)) {
+      await onCatchHttpError(e);
     }
     throw e;
   } finally {
     setTimeoutForId(id, false);
-    afterHttp && afterHttp();
+    after && (await after());
   }
 }
 
