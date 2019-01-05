@@ -1,14 +1,14 @@
-import { JSONSchema7 } from "json-schema";
-import { once } from "lodash";
-import { HttpMethods } from "@common/http/httpApiMethods";
-import { McHttpJsonOptions, postJson } from "@common/http/mcHttp";
+import { JSONSchema7 } from 'json-schema';
+import { once } from 'lodash';
+import { HttpMethods } from '@common/http/httpApiMethods';
+import { McHttpJsonOptions, postJson } from '@common/http/mcHttp';
 
 type AdditionApiOptions = Partial<McHttpJsonOptions>;
 
 export type HttpApiService = methods;
 
 export const getHttpMethodInfo = once(async () => {
-  const obj = (await import("./schema.json")) as JSONSchema7;
+  const obj = (await import('./schema.json')) as JSONSchema7;
 
   const noInputOrOutput = [];
   const onlyInput = [];
@@ -20,13 +20,13 @@ export const getHttpMethodInfo = once(async () => {
   const propKeys = Object.keys(props) as (keyof HttpMethods)[];
   for (const method of propKeys) {
     const def = props[method];
-    if (typeof def !== "boolean") {
-      if (def.type === "undefined") {
+    if (typeof def !== 'boolean') {
+      if (def.type === 'undefined') {
         noInputOrOutput.push(method);
       } else {
         const subprops = def.properties!;
-        if (subprops["input"]) {
-          if (subprops["output"]) {
+        if (subprops['input']) {
+          if (subprops['output']) {
             inputAndOutput.push(method);
           } else {
             onlyInput.push(method);
@@ -34,7 +34,7 @@ export const getHttpMethodInfo = once(async () => {
         } else {
           onlyOutput.push(method);
         }
-        if (subprops["noSession"]) {
+        if (subprops['noSession']) {
           noSession.add(method);
         }
       }
@@ -50,13 +50,13 @@ type methods = {
     ? (options?: AdditionApiOptions) => void
     : HttpMethods[K] extends { input: any; output: any }
     ? (
-        params: HttpMethods[K]["input"],
+        params: HttpMethods[K]['input'],
         options?: AdditionApiOptions
-      ) => HttpMethods[K]["output"]
+      ) => HttpMethods[K]['output']
     : HttpMethods[K] extends { input: any }
-    ? (params: HttpMethods[K]["input"], options?: AdditionApiOptions) => void
+    ? (params: HttpMethods[K]['input'], options?: AdditionApiOptions) => void
     : HttpMethods[K] extends { output: any }
-    ? (options?: AdditionApiOptions) => HttpMethods[K]["output"]
+    ? (options?: AdditionApiOptions) => HttpMethods[K]['output']
     : never
 };
 
