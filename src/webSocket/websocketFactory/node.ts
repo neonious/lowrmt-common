@@ -1,8 +1,10 @@
 import * as WebSocketWs from "ws";
 import { IWebSocket } from "../../webSocket/webSocket";
+import { httpsPool, httpPool } from '../../http/handler/node';
 
 export function createNode(url: string) {
-  const socket = new WebSocketWs(url, { rejectUnauthorized: false });
+  const agent = url.startsWith('wss')||url.startsWith('https')?httpsPool:httpPool;
+  const socket = new WebSocketWs(url, { rejectUnauthorized: false,agent });
   return new class implements IWebSocket {
     private msgDel: ((data: string) => void) | null = null;
     private closeDel: ((code: number) => void) | null = null;
