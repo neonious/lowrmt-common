@@ -3,7 +3,6 @@ import { v4 as uuid } from "uuid";
 import { HttpHandler } from "./handler/handler";
 import { isOk, isReject, McHttpOptions, send } from "./mcHttp";
 import { McHttpError } from "./mcHttpError";
-import { onError } from "./onError";
 const isNode = require("is-node");
 
 export interface WebdavNoProgressOptions
