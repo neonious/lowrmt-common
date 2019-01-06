@@ -18,7 +18,7 @@ export function createSocketForMethod({
   if (!noSession) {
     q.push(`s=${getSession()}`);
   }
-  if (password) {
+  if (password !== undefined) {
     q.push(`p=${password}`);
   }
   const url = `${ssl ? 'wss' : 'ws'}://${ip}:${port}/api/${method}${

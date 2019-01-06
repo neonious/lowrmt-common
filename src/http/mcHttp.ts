@@ -20,12 +20,13 @@ export interface McHttpJsonOptions
   json?: unknown;
 }
 
-function getHttpHostPrefix(): string {
+function getHttpHostPrefix({ ip, port, ssl }: McHttpOptions): string {
   const isNode = require('is-node');
   if (!isNode) return '';
-  return `${
-    getUseSsl() ? 'https' : 'http'
-  }://${getHostNameOrIp()}:${getPort()}`;
+  ip = ip || getHostNameOrIp();
+  port = port === undefined ? getPort() : port;
+  ssl = ssl === undefined ? getUseSsl() : ssl;
+  return `${ssl ? 'https' : 'http'}://${ip}:${port}`;
 }
 
 export function isOk(response: HttpHandler.Response) {
@@ -72,30 +73,15 @@ export function onHttpFail(callback: HttpFailCallback) {
 }
 
 export async function send(options: McHttpOptions) {
-  const { noSession } = options;
-
-  let response: HttpHandler.Response | undefined;
-  let sessionObj;
-  if (!noSession) {
-    const {
-      getSession
-    } = await import('@common/services/authentication/session');
-    sessionObj = { SessionID: getSession() };
-  }
-  options = {
-    ...options,
-    url: `${getHttpHostPrefix()}${options.url}`,
-    headers: {
-      ...options.headers,
-      ...sessionObj
-    }
-  };
   const id = v4();
   try {
+    options = (before && (await before(options))) || options;
+
+    let response: HttpHandler.Response | undefined;
+
     let start = new Date().getTime();
 
     // todo timeouterror is only thrown if is web target (not node). also download and upload progress only for web atm
-    options = (before && (await before(options))) || options;
 
     async function handleErrorRepeat(err: McHttpError) {
       if (response) response.err = err;
@@ -112,8 +98,31 @@ export async function send(options: McHttpOptions) {
 
     while (true) {
       options = (beforeEach && (await beforeEach(options))) || options;
+
+      const { noSession } = options;
+
+      let sessionObj;
+      if (!noSession) {
+        const {
+          getSession
+        } = await import('@common/services/authentication/session');
+        sessionObj = { SessionID: getSession() };
+      }
+
+      const httpOptions = {
+        ...options,
+        url: `${getHttpHostPrefix(options)}${options.url}`,
+        headers: {
+          ...options.headers,
+          ...sessionObj,
+          ...(options.password !== undefined
+            ? { Password: options.password }
+            : undefined)
+        }
+      };
+
       try {
-        response = await sendHttp(options);
+        response = await sendHttp(httpOptions);
       } catch (e) {
         if (e instanceof HttpHandler.TimeoutError) {
           setTimeoutForId(id, true);
@@ -125,7 +134,7 @@ export async function send(options: McHttpOptions) {
           throw e;
         } else {
           const err = new McHttpError(options, null, e);
-          if (handleErrorRepeat(err)) continue;
+          if (await handleErrorRepeat(err)) continue;
           throw err;
         }
       }
@@ -133,7 +142,8 @@ export async function send(options: McHttpOptions) {
         if (isOk(response)) {
           success && (await success(options, response));
         } else {
-          if (handleErrorRepeat(new McHttpError(options, response))) continue;
+          if (await handleErrorRepeat(new McHttpError(options, response)))
+            continue;
         }
         break;
       }

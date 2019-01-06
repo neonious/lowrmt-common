@@ -43,18 +43,12 @@ afterLogout.add(() => {
 type BeforeWebsocketCallback = (
   options: MethodWebsocketOptions
 ) => MethodWebsocketOptions;
-type BeforeEachWebsocketCallback = (
-  options: MethodWebsocketOptions
-) => MethodWebsocketOptions;
-type SuccessWebsocketCallback = (options: MethodWebsocketOptions) => void;
 type FailWebsocketCallback = (
   options: MethodWebsocketOptions,
   forbidden: boolean
 ) => MethodWebsocketOptions | void;
 
 let before: BeforeWebsocketCallback | undefined;
-let beforeEach: BeforeEachWebsocketCallback | undefined;
-let success: SuccessWebsocketCallback | undefined;
 let fail: FailWebsocketCallback | undefined;
 
 export function onBeforeWebsocket(callback: BeforeWebsocketCallback) {
