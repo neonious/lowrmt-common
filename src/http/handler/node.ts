@@ -3,11 +3,11 @@ import * as https from "https";
 import { HttpHandler } from "@common/http/handler/handler";
 import * as request from "request-promise-native";
 
-const httpsPool = new https.Agent({
+export const httpsPool = new https.Agent({
   keepAlive: true,
   rejectUnauthorized: false
 });
-const httpPool = new http.Agent({ keepAlive: true });
+export const httpPool = new http.Agent({ keepAlive: true });
 
 export default function sendNode(options: HttpHandler.Options) {
   const {

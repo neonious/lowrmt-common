@@ -1,6 +1,6 @@
 import { padStart } from "lodash";
 
-function getTimestampPrefix(timestamp: number) {
+export function getTimestampPrefix(timestamp: number) {
   const date = new Date(0);
   date.setUTCMilliseconds(timestamp);
   const timestampPrefix = `[${date.toLocaleTimeString()}] `;
