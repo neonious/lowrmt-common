@@ -20,6 +20,7 @@ export interface HttpMethods {
     output: {
       willUpdate: boolean;
     };
+    noSession: true;
   };
   GetSoftwareVersion: {
     output: {

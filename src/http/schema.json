@@ -248,6 +248,12 @@
         },
         "UpdateAndLogout": {
             "properties": {
+                "noSession": {
+                    "enum": [
+                        true
+                    ],
+                    "type": "boolean"
+                },
                 "output": {
                     "properties": {
                         "willUpdate": {
