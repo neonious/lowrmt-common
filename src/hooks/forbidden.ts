@@ -18,6 +18,16 @@ export function setOnForbidden(callback: () => void) {
   _onForbidden = callback;
 }
 
+let globalConsole=false;
+
+export function getGlobalConsole(){
+  return globalConsole;
+}
+
+export function setGlobalConsole(global:boolean){
+  globalConsole=global;
+}
+
 let _port = 8443;
 export function setPort(port: number) {
   _port = port;
