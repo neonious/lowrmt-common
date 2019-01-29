@@ -132,7 +132,7 @@ export class ForbiddenTimeoutHandlingSocketImpl {
       ) {
         this.clearSendTimer();
         this.clearRecTimer();
-        console.log("Socket close: TIMEOUT!", this.url);
+        // TIMEOUT!
         this.setTimeout(true);
         if (this.createNewSocketTimeout)
           clearTimeout(this.createNewSocketTimeout);
@@ -174,6 +174,11 @@ export class ForbiddenTimeoutHandlingSocketImpl {
     if (timeout !== this.isTimeout) {
       this.isTimeout = timeout;
       setTimeoutForId(this.id, timeout);
+      if (timeout){
+        console.log(`*** The connection has been lost. We will retry connecting to the microcontroller. In the meantime, please check your connection ***`);
+      }else{
+        console.log(`*** The connection to the microcontroller has been re-established ***`);
+      }
     }
   }
 
@@ -181,12 +186,7 @@ export class ForbiddenTimeoutHandlingSocketImpl {
     this.clearRecTimer();
     this.recTimer = setTimeout(() => {
       this.socket.close();
-      console.log(
-        "Did not recieve something for",
-        ForbiddenTimeoutHandlingSocketImpl.MAX_TIME_NO_MSG_RECEIVED,
-        "ms: TIMEOUT!",
-        this.url
-      );
+      // did not receive something for ForbiddenTimeoutHandlingSocketImpl.MAX_TIME_NO_MSG_RECEIVED ms, timeout!
       this.setTimeout(true);
       this.createNewSocket();
     }, ForbiddenTimeoutHandlingSocketImpl.MAX_TIME_NO_MSG_RECEIVED);
