@@ -6,8 +6,10 @@ import { McHttpError } from '@common/http/mcHttpError';
 export async function sendHttp(
   options: HttpHandler.Options
 ): Promise<HttpHandler.Response> {
-
-  const mod = (process.env.TARGETWEB==='true' ? await import('@common/http/handler/web') : await import('@common/http/handler/node')).default;
+  const mod = (process.env.TARGETWEB === 'true'
+    ? await import('@common/http/handler/web')
+    : await import('@common/http/handler/node')
+  ).default;
   const start = Date.now();
   const result = await mod(options);
   debugLogTime(start, 'HTTP Request', options.method, options.url);
@@ -43,7 +45,7 @@ export namespace HttpHandler {
   }
 
   export interface Response {
-    err?:McHttpError;
+    err?: McHttpError;
     readonly status: number;
     readonly responseText: string;
     readonly arrayBuffer: Uint8Array;

@@ -11,7 +11,6 @@ const keysToDKeys: Dict<string> = {};
 
 forOwn(definitions, (subDefinitions, pageKey: SettingPageKey) => {
     forOwn(subDefinitions, (definition: SettingDef, key: SettingsKey) => {
-        const { $type } = definition;
         pageByKey[key] = pageKey;
         keysByPage[pageKey] = keysByPage[pageKey] || [];
         keysByPage[pageKey].push(key);

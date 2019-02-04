@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { HttpHandler } from "./handler/handler";
 import { isOk, isReject, McHttpOptions, send } from "./mcHttp";
 import { McHttpError } from "./mcHttpError";
-import { onError } from "./onError";
+import { onCatchHttpError } from "@common/hooks/forbidden";
 const isNode = require("is-node");
 
 export interface WebdavNoProgressOptions
@@ -26,37 +26,33 @@ async function ajax({
   actionId?: string;
 } & RejectOptions) {
   let response: HttpHandler.Response | undefined;
-  try {
-    const actionIdHeader = actionId ? { ActionID: actionId } : undefined;
-    const newOptions = {
-      ...options,
-      headers: {
-        ...options.headers,
-        ClientID: clientId,
-        ...actionIdHeader
-      },
-      reject: false
-    };
-    response = await send(newOptions);
-    if (options.rejectCondition(response)) {
-      const err = new McHttpError(
-        newOptions,
-        response,
-        undefined,
-        options.rejectMsg
-      );
-      response.err = err;
-      if (isReject(options)) throw err;
-    } else {
-      response.err = undefined;
+  const actionIdHeader = actionId ? { ActionID: actionId } : undefined;
+  const newOptions = {
+    ...options,
+    headers: {
+      ...options.headers,
+      ClientID: clientId,
+      ...actionIdHeader
+    },
+    reject: false
+  };
+  response = await send(newOptions);
+  if (options.rejectCondition(response)) {
+    const err = new McHttpError(
+      newOptions,
+      response,
+      undefined,
+      options.rejectMsg
+    );
+    response.err = err;
+    if (isReject(options)) {
+      await onCatchHttpError(err);
+      throw err;
     }
-    return response;
-  } catch (e) {
-    if (onError) {
-      onError(e, options, response);
-    }
-    throw e;
+  } else {
+    response.err = undefined;
   }
+  return response;
 }
 
 function findBinaryFileInternal(

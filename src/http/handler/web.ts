@@ -54,7 +54,7 @@ export default function sendWeb(
         status: request.status,
         get responseText() {
           // need to lazy load because: Failed to read the 'responseText' property from 'XMLHttpRequest': The value is only accessible if the object's 'responseType' is '' or 'text' (was 'arraybuffer').
-
+          
           if (!arrayBufferResponse) {
             return request.responseText;
           }
@@ -64,6 +64,7 @@ export default function sendWeb(
           if (arrayBufferResponse) {
             return new Uint8Array(request.response);
           }
+          console.log(url);
           throw new Error("arrayBufferResponse was not set in http options.");
         },
         headers: request.getAllResponseHeaders()

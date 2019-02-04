@@ -1,8 +1,48 @@
-export interface PackageInfo {
-  name: string;
-  author: string;
-  desc?: string;
-  maxVersion: string;
+export interface PkgVersions {
+  [name: string]: string;
+}
+
+export interface PkgInfoValue {
+  author?: string;
+  description: string;
+  registryVersion: string;
+}
+
+export interface PkgInfos {
+  [name: string]: PkgInfoValue;
+}
+
+export function parsePkgExpr(p: string): { name: string; version?: string } {
+  const atidx = p.lastIndexOf("@");
+  if (atidx > 0) {
+    // if 0 then is scoped npm pkg, not anything to do with a version
+    const name = p.substr(0, atidx);
+    const version = p.substr(atidx + 1);
+    return { name, version };
+  }
+  return { name: p };
+}
+
+export type PackageOp = { expr: string; type: AddRemove };
+
+export type PackagesOp = { exprs: string[]; type: AddRemove };
+
+export interface PkgSearchInput {
+  query: string;
+  startIndex: number;
+  maxResults: number;
+}
+
+export type AddRemove = "add" | "remove";
+
+export interface PkgAddRemoveServerInput extends PkgAddRemoveInput {
+  existingPkgs: PkgVersions;
+}
+
+export interface PkgAddRemoveInput {
+  id: string;
+  type: AddRemove;
+  pkgs: string[];
 }
 
 export interface HttpMethods {
@@ -14,7 +54,7 @@ export interface HttpMethods {
     output: {
       loggedIn: boolean;
     };
-    noSession:true;
+    noSession: true;
   };
   UpdateAndLogout: {
     output: {
@@ -45,12 +85,9 @@ export interface HttpMethods {
       settings: {};
     };
   };
-  UpdatePackage: {
-    input: {
-      package: string;
-      command: "install" | "remove";
-      version: string;
-    };
+  PkgAddRemove: {
+    input: PkgAddRemoveInput;
+    internet: true;
   };
   ValidateSettings: {
     input: {
@@ -58,13 +95,18 @@ export interface HttpMethods {
     };
     output: {};
   };
-  GetPackageInfos: {
-    input: { name: string; version: string }[];
-    output: PackageInfo[];
+  PkgListInstalled: {
+    output: PkgVersions;
   };
-  PackageSearch: {
-    input: { query: string; startIndex?: number };
-    output: PackageInfo[];
+  PkgInfo: {
+    input: PkgVersions;
+    output: PkgInfos;
+    internet: true;
+  };
+  PkgSearch: {
+    input: PkgSearchInput;
+    output: PkgInfos;
+    internet: true;
   };
   Start: {
     input: {

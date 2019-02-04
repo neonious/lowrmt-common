@@ -10,7 +10,7 @@ export class HandlerEventHub<T> implements HandlerEvent<T> {
     private handlers = new Set<(t: T) => void>();
     private asyncHandlers = new Set<(t: T) => Promise<void>>();
 
-    constructor(private name?: string) { }
+    constructor() { }
 
     async fire(t: T): Promise<void> {
         this.handlers.forEach(h => h(t));

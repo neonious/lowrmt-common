@@ -1,20 +1,67 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
-        "PackageInfo": {
+        "AddRemove": {
+            "enum": [
+                "add",
+                "remove"
+            ],
+            "type": "string"
+        },
+        "PkgAddRemoveInput": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "pkgs": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "type": {
+                    "$ref": "#/definitions/AddRemove"
+                }
+            },
+            "type": "object"
+        },
+        "PkgInfoValue": {
             "properties": {
                 "author": {
                     "type": "string"
                 },
-                "desc": {
+                "description": {
                     "type": "string"
                 },
-                "maxVersion": {
-                    "type": "string"
-                },
-                "name": {
+                "registryVersion": {
                     "type": "string"
                 }
+            },
+            "type": "object"
+        },
+        "PkgInfos": {
+            "additionalProperties": {
+                "$ref": "#/definitions/PkgInfoValue"
+            },
+            "type": "object"
+        },
+        "PkgSearchInput": {
+            "properties": {
+                "maxResults": {
+                    "type": "number"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "startIndex": {
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "PkgVersions": {
+            "additionalProperties": {
+                "type": "string"
             },
             "type": "object"
         }
@@ -22,31 +69,6 @@
     "properties": {
         "ClearLog": {
             "type": "undefined"
-        },
-        "GetPackageInfos": {
-            "properties": {
-                "input": {
-                    "items": {
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "version": {
-                                "type": "string"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "type": "array"
-                },
-                "output": {
-                    "items": {
-                        "$ref": "#/definitions/PackageInfo"
-                    },
-                    "type": "array"
-                }
-            },
-            "type": "object"
         },
         "GetSettings": {
             "properties": {
@@ -130,24 +152,58 @@
             },
             "type": "object"
         },
-        "PackageSearch": {
+        "PkgAddRemove": {
             "properties": {
                 "input": {
-                    "properties": {
-                        "query": {
-                            "type": "string"
-                        },
-                        "startIndex": {
-                            "type": "number"
-                        }
-                    },
-                    "type": "object"
+                    "$ref": "#/definitions/PkgAddRemoveInput"
+                },
+                "internet": {
+                    "enum": [
+                        true
+                    ],
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "PkgInfo": {
+            "properties": {
+                "input": {
+                    "$ref": "#/definitions/PkgVersions"
+                },
+                "internet": {
+                    "enum": [
+                        true
+                    ],
+                    "type": "boolean"
                 },
                 "output": {
-                    "items": {
-                        "$ref": "#/definitions/PackageInfo"
-                    },
-                    "type": "array"
+                    "$ref": "#/definitions/PkgInfos"
+                }
+            },
+            "type": "object"
+        },
+        "PkgListInstalled": {
+            "properties": {
+                "output": {
+                    "$ref": "#/definitions/PkgVersions"
+                }
+            },
+            "type": "object"
+        },
+        "PkgSearch": {
+            "properties": {
+                "input": {
+                    "$ref": "#/definitions/PkgSearchInput"
+                },
+                "internet": {
+                    "enum": [
+                        true
+                    ],
+                    "type": "boolean"
+                },
+                "output": {
+                    "$ref": "#/definitions/PkgInfos"
                 }
             },
             "type": "object"
@@ -258,29 +314,6 @@
                     "properties": {
                         "willUpdate": {
                             "type": "boolean"
-                        }
-                    },
-                    "type": "object"
-                }
-            },
-            "type": "object"
-        },
-        "UpdatePackage": {
-            "properties": {
-                "input": {
-                    "properties": {
-                        "command": {
-                            "enum": [
-                                "install",
-                                "remove"
-                            ],
-                            "type": "string"
-                        },
-                        "package": {
-                            "type": "string"
-                        },
-                        "version": {
-                            "type": "string"
                         }
                     },
                     "type": "object"

@@ -1,3 +1,13 @@
+let _onCatchHttpError: ((err: any) => Promise<void>) | undefined;
+
+export async function onCatchHttpError(err: any) {
+  _onCatchHttpError && (await _onCatchHttpError(err));
+}
+
+export function setOnCatchHttpError(callback: (err: any) => Promise<void>) {
+  _onCatchHttpError = callback;
+}
+
 export function onForbidden(): void {
   _onForbidden && _onForbidden();
 }
@@ -6,6 +16,16 @@ let _onForbidden: (() => void) | undefined;
 
 export function setOnForbidden(callback: () => void) {
   _onForbidden = callback;
+}
+
+let globalConsole=false;
+
+export function getGlobalConsole(){
+  return globalConsole;
+}
+
+export function setGlobalConsole(global:boolean){
+  globalConsole=global;
 }
 
 let _port = 8443;
