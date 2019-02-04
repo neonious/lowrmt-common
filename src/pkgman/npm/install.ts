@@ -41,7 +41,7 @@ export async function getOptimizedModules({
       version,
       resolve(path, 'node_modules', relPath)
     );
-    Object.assign(result, mapKeys(optimizedDep, (v, k) => join(relPath, k)));
+    Object.assign(result, mapKeys(optimizedDep as any, (v, k) => join(relPath, k)));
   }
   return result;
 }
