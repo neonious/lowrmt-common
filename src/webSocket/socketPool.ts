@@ -1,10 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { getHostNameOrIp, getPort, getUseSsl } from '../hooks/forbidden';
 import { afterLogout } from '../services/authentication/events';
-import {
-  createSocketForMethod,
-  MethodWebsocketOptions
-} from './socketMethodFactory';
+import { createSocketForMethod, MethodWebsocketOptions } from './socketMethodFactory';
 import { DuplexStreams } from './types/types';
 
 export interface Base {

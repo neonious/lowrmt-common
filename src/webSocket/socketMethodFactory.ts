@@ -13,7 +13,7 @@ export function createSocketForMethod({
   port,
   ssl,
   noSession,
-  password,
+  password
 }: MethodWebsocketOptions) {
   let q = [];
   if (!noSession) {
