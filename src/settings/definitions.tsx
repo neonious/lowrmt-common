@@ -289,6 +289,11 @@ export const definitions = {
             label: t => 'Auto close brackets',
             default: true
         } as SettingDef,
+        editor__auto_save_on_start: {
+            $type: 'boolean',
+            label: t => 'Auto save on run',
+            default: false
+        } as SettingDef,
         editor__font_size: {
             $type: 'number',
             icon: 'fa icon-font-size',
@@ -326,9 +331,41 @@ export const definitions = {
             description: t => 'If enabled, your program will run when neonious one boots.',
             label: t => t.codesettings.autostart
         } as SettingDef,
+        code__auto_restart_on_fatal: {
+            $type: 'boolean',
+            description: t => 'If enabled, your program will restart when a fatal exception happens.',
+            label: t => 'Auto restart on fatal exception'
+        } as SettingDef,
         code__main: {
             $type: 'string',
             label: t => 'Main entry file',
+        } as SettingDef,
+        code__watchdog_mode: {
+            $type: 'select',
+            label: t => 'Mode',
+            values: [
+                {
+                    value: 'off',
+                    label: t => 'Disabled'
+                },
+                {
+                    value: 'software',
+                    label: t => 'Software/engine based'
+                },
+                {
+                    value: 'hardware',
+                    label: t => 'Hardware based'
+                }
+            ]
+        } as SettingDef,
+        code__watchdog_timeout_secs:{
+            $type: 'number',
+            description: t => 'Seconds after which the watchdog will timeout and restart the program (software) or the device (hardware).',
+            label: t => 'Seconds till timeout'
+        } as SettingDef,
+        code__kick_watchdog_event_loop:{
+            $type:'boolean',
+            label:t => 'Shall the watchdog be reset in the event loop?'
         } as SettingDef
     },
     sdcard: {
