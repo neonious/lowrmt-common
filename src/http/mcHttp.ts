@@ -22,7 +22,7 @@ export interface McHttpOptions extends BaseMcHttpOptions, HttpHandler.Options {}
 
 export interface McHttpJsonOptions
   extends BaseMcHttpOptions,
-    Omit<HttpHandler.Options, "params" | "method"> {
+    Omit<HttpHandler.Options, 'params' | 'method'> {
   json?: unknown;
 }
 
@@ -36,11 +36,11 @@ function getHttpHostPrefix({ ip, port, ssl }: McHttpOptions): string {
 }
 
 export function isOk(response: HttpHandler.Response) {
-  return response.status.toString()[0] === "2";
+  return response.status.toString()[0] === '2';
 }
 
-export function isReject(options: Pick<McHttpOptions, "reject">) {
-  return typeof options.reject === "undefined" || options.reject;
+export function isReject(options: Pick<McHttpOptions, 'reject'>) {
+  return typeof options.reject === 'undefined' || options.reject;
 }
 
 type BeforeHttpCallback = (options: McHttpOptions) => Promise<McHttpOptions>;
@@ -179,12 +179,12 @@ export async function send(options: McHttpOptions) {
 export async function postJson<T>({ url, json, ...rest }: McHttpJsonOptions) {
   const result = await send({
     ...rest,
-    method: "POST",
+    method: 'POST',
     url: url,
     params: JSON.stringify(json),
     headers: {
       ...rest.headers,
-      "Content-Type": "application/json;charset=UTF-8"
+      'Content-Type': 'application/json;charset=UTF-8'
     },
     reject: true
   });
@@ -195,7 +195,7 @@ export async function postJson<T>({ url, json, ...rest }: McHttpJsonOptions) {
       : undefined) as T;
   } catch (e) {
     if (e instanceof SyntaxError) {
-      console.error("Original JSON: ", result.responseText);
+      console.error('Original JSON: ', result.responseText);
     }
     throw e;
   }
