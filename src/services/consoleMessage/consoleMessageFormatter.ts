@@ -1,5 +1,4 @@
 import { padStart } from "lodash";
-import { setGlobalConsole } from '@common/hooks/forbidden';
 
 export function getConsoleLineFormatter(timestamp: number) {
   const date = new Date(0);

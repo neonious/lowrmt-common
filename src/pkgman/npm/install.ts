@@ -6,7 +6,6 @@ import { getOrCreateOptimizedDependency } from '../dependency/optimized/get';
 import { PackageLock } from '../dependency/readPackageLock';
 import { getDependencyTree } from '../dependency/tree';
 import { FilesFromFolder } from '../files/files';
-import * as assert from 'assert';
 import { DefinedError } from '../err';
 
 export interface NpmInstallOptions {
