@@ -6,7 +6,6 @@ import { getOrCreateOptimizedDependency } from '../dependency/optimized/get';
 import { PackageLock } from '../dependency/readPackageLock';
 import { getDependencyTree } from '../dependency/tree';
 import { FilesFromFolder } from '../files/files';
-import * as assert from 'assert';
 import { DefinedError } from '../err';
 
 export interface NpmInstallOptions {
@@ -41,7 +40,7 @@ export async function getOptimizedModules({
       version,
       resolve(path, 'node_modules', relPath)
     );
-    Object.assign(result, mapKeys(optimizedDep, (v, k) => join(relPath, k)));
+    Object.assign(result, mapKeys(optimizedDep as any, (v, k) => join(relPath, k)));
   }
   return result;
 }

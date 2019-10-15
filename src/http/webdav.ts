@@ -7,7 +7,7 @@ import { onCatchHttpError } from "@common/hooks/forbidden";
 const isNode = require("is-node");
 
 export interface WebdavNoProgressOptions
-  extends Omit<McHttpOptions, "url" | "method"> {
+  extends Omit<McHttpOptions, 'url' | 'method'> {
   actionId?: string;
 }
 
@@ -17,7 +17,7 @@ interface RejectOptions {
 }
 
 export const clientId = uuid();
-const fsPrefix = "/fs";
+const fsPrefix = '/fs';
 
 async function ajax({
   actionId,
@@ -60,7 +60,7 @@ function findBinaryFileInternal(
   options: WebdavNoProgressOptions & RejectOptions
 ) {
   return ajax({
-    method: "GET",
+    method: 'GET',
     url: `${fsPrefix}${path}`,
     arrayBufferResponse: true,
     ...options
@@ -90,11 +90,11 @@ export function putFile(
 ) {
   if (!isNode) data = data instanceof Blob ? data : new Blob([data]); // merken: wenn man uint8array hochlädt, blockiert der browser (zumindest chrome)
   return ajax({
-    method: "PUT",
+    method: 'PUT',
     url: `${fsPrefix}${path}`,
     params: data,
     headers: {
-      "Content-Type": "application/octet-stream"
+      'Content-Type': 'application/octet-stream'
     },
     ...options,
     rejectMsg: `Could not upload to ${path}.`,
@@ -107,7 +107,7 @@ export function deleteFile(
   options: WebdavNoProgressOptions = {}
 ) {
   return ajax({
-    method: "DELETE",
+    method: 'DELETE',
     url: `${fsPrefix}${path}`,
     ...options,
     rejectMsg: `Could not delete ${path}.`,
@@ -120,7 +120,7 @@ export function createDirectory(
   options: WebdavNoProgressOptions = {}
 ) {
   return ajax({
-    method: "MKCOL",
+    method: 'MKCOL',
     url: `${fsPrefix}${path}`,
     ...options,
     rejectMsg: `Could not create directory at ${path}.`,
@@ -130,10 +130,10 @@ export function createDirectory(
 
 export function moveFile(from: string, to: string, overwrite = false) {
   return ajax({
-    method: "MOVE",
+    method: 'MOVE',
     url: `${fsPrefix}${from}`,
     headers: {
-      Overwrite: overwrite ? "T" : "F",
+      Overwrite: overwrite ? 'T' : 'F',
       Destination: `${fsPrefix}${to}`
     },
     rejectMsg: `Could not move from ${from} to ${to}.`,
@@ -143,10 +143,10 @@ export function moveFile(from: string, to: string, overwrite = false) {
 
 export function copyFile(from: string, to: string, overwrite = false) {
   return ajax({
-    method: "COPY",
+    method: 'COPY',
     url: `${fsPrefix}${from}`,
     headers: {
-      Overwrite: overwrite ? "T" : "F",
+      Overwrite: overwrite ? 'T' : 'F',
       Destination: `${fsPrefix}${to}`
     },
     rejectMsg: `Could not copy from ${from} to ${to}.`,

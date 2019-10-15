@@ -1,4 +1,3 @@
-import { readFile } from 'fs-extra';
 import { toPairs } from 'lodash';
 import { join } from 'path';
 import { PackageLock, PackageLockDeps } from './readPackageLock';

@@ -607,6 +607,7 @@ function DebugProtocolParser(mainSocket, inputStream,
                         }
                         break;
                     default:
+                    
                         _this.emit('transport-error', 'Parse error, dropping connection');
                         _this.close();
                 }
@@ -649,16 +650,26 @@ function DebugProtocolParser(mainSocket, inputStream,
             console.log("debugger stream closed");
             _this.close();
         });
+        let dataQueue = [], dataReading = false;
         mainSocket.onMessage2.subscribe((e) => {
             if (e === '')      // ping
                 return;
 
             // e.data is blob
-            var fileReader = new FileReader();
-            fileReader.onload = function () {
-                inputStreamData(Buffer.from(this.result));
-            };
-            fileReader.readAsArrayBuffer(e);
+            function readNext() {
+                dataReading = true;
+                var fileReader = new FileReader();
+                fileReader.onload = function () {
+                    inputStreamData(Buffer.from(this.result));
+                    dataReading = false;
+                    if(dataQueue.length)
+                        readNext();
+                };
+                fileReader.readAsArrayBuffer(dataQueue.shift());
+            }
+            dataQueue.push(e);
+            if(!dataReading)
+                readNext();
         });
     } else
         console.log('unknown input stream type ' + inputStreamType);
