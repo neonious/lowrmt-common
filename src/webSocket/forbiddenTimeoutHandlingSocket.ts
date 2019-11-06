@@ -138,7 +138,7 @@ export class ForbiddenTimeoutHandlingSocketImpl {
           clearTimeout(this.createNewSocketTimeout);
         this.createNewSocketTimeout = setTimeout(() => {
           this.createNewSocket();
-        }, 3000);
+        }, 10000);
         return;
       }
 

@@ -141,7 +141,7 @@ export async function send(options: McHttpOptions) {
       } catch (e) {
         if (e instanceof HttpHandler.TimeoutError) {
           setTimeoutForId(id, true);
-          let nextDate = start + 5000;
+          let nextDate = start + 10000;
           let leftTime = nextDate - new Date().getTime();
           if (leftTime > 0) await delay(leftTime);
           start = nextDate;
