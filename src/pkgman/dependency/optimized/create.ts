@@ -65,7 +65,7 @@ export async function createOptimizedDependency(
       let minified;
       try {
         const UglifyJS = require("uglify-es");
-        minified = UglifyJS.minify(transpiled).code as string;
+        minified = UglifyJS.minify(transpiled, {compress: {sequences: false}}).code as string;
       } catch (e) {
         minified = transpiled;
       }
