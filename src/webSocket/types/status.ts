@@ -234,6 +234,8 @@ export namespace Status {
       }
     | { action: "start"; file: string }
     | { code: true }
+    | { stdin: {data: string} }
+    | { stdin: {cols: number, rows: number} }
     | { status: true };
 }
 
