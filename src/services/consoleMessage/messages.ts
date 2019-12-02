@@ -24,7 +24,9 @@ export function getConsoleMessages(): Observable<ConsoleMessage> {
         const { s: timestamp, l, t: message } = log;
         const level = l || "l";
         if (message.indexOf("\n") !== -1) {
-          const lines = message.split("\n").map(p => p.trim());
+          let lines = message.split("\n");
+          if(lines[lines.length - 1] == '')
+              lines.pop();		// we now send a \n as last char
           return {
             timestamp,
             level,
