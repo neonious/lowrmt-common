@@ -2,15 +2,15 @@ import { definitions, SettingDef, SettingPageKey, SettingsKey } from '../setting
 import { forOwn, keys, cloneDeep } from 'lodash';
 import { Translations } from '../translations/base/translations';
 
-const pageByKey: { [K in SettingsKey]: SettingPageKey } = Object.create(null);
-const keysByPage: { [K in SettingPageKey]: SettingsKey[] } = Object.create(null);
-const defByKey: { [K in SettingsKey]: SettingDef } = Object.create(null);
+const pageByKey: any = Object.create(null);
+const keysByPage: any = Object.create(null);
+const defByKey: any = Object.create(null);
 const settingKeys: SettingsKey[] = [];
 const dKeysToKey: Dict<SettingsKey> = {};
 const keysToDKeys: Dict<string> = {};
 
-forOwn(definitions, (subDefinitions, pageKey: SettingPageKey) => {
-    forOwn(subDefinitions, (definition: SettingDef, key: SettingsKey) => {
+forOwn(definitions, (subDefinitions: any, pageKey: any) => {
+    forOwn(subDefinitions, (definition: any, key: any) => {
         pageByKey[key] = pageKey;
         keysByPage[pageKey] = keysByPage[pageKey] || [];
         keysByPage[pageKey].push(key);
@@ -30,7 +30,7 @@ type BySettingsKey = Record<SettingsKey, any>;
 export function toSettingsStructure(flat: BySettingsKey, page?: SettingPageKey) {
 
     const result = Object.create(null);
-    forOwn(flat, (value, key: SettingsKey) => {
+    forOwn(flat, (value, key: any) => {
         if ((!page || getPage(key) === page)) {
             const index = key.indexOf('__');
             const topKey = key.substr(0, index);
@@ -142,7 +142,7 @@ export function validateAll(key: SettingsKey, value: any, translations: Translat
 
 export function fillFlatStructureWithDefaults(flatSettings: Dict<any>) {
     const defsByKey = getSettingDefinitions()
-    forOwn(defsByKey, (def, key: SettingsKey) => {
+    forOwn(defsByKey, (def, key: any) => {
         if (!(key in flatSettings)) {
             let defValue: any;
             if ('default' in def) {

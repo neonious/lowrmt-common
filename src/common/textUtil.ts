@@ -1,7 +1,7 @@
 
 export function decodeToText(buf: Uint8Array) {// better than textencoder, because async
     return new Promise<string>(resolve => {
-        var bb = new Blob([buf.buffer]);
+        var bb = new Blob([buf.buffer as any] as any) as any;
         var f = new FileReader();
         f.onload = function (e) {
             const str = (e.target as any).result;
