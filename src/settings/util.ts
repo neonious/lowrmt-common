@@ -9,8 +9,8 @@ const settingKeys: SettingsKey[] = [];
 const dKeysToKey: Dict<SettingsKey> = {};
 const keysToDKeys: Dict<string> = {};
 
-forOwn(definitions, (subDefinitions: any, pageKey: any) => {
-    forOwn(subDefinitions, (definition: any, key: any) => {
+forOwn(definitions, (subDefinitions, pageKey: SettingPageKey) => {
+    forOwn(subDefinitions, (definition: SettingDef, key: SettingsKey) => {
         pageByKey[key] = pageKey;
         keysByPage[pageKey] = keysByPage[pageKey] || [];
         keysByPage[pageKey].push(key);
@@ -30,7 +30,7 @@ type BySettingsKey = Record<SettingsKey, any>;
 export function toSettingsStructure(flat: BySettingsKey, page?: SettingPageKey) {
 
     const result = Object.create(null);
-    forOwn(flat, (value, key: any) => {
+    forOwn(flat, (value, key: SettingsKey) => {
         if ((!page || getPage(key) === page)) {
             const index = key.indexOf('__');
             const topKey = key.substr(0, index);
@@ -142,7 +142,7 @@ export function validateAll(key: SettingsKey, value: any, translations: Translat
 
 export function fillFlatStructureWithDefaults(flatSettings: Dict<any>) {
     const defsByKey = getSettingDefinitions()
-    forOwn(defsByKey, (def, key: any) => {
+    forOwn(defsByKey, (def, key: SettingsKey) => {
         if (!(key in flatSettings)) {
             let defValue: any;
             if ('default' in def) {
