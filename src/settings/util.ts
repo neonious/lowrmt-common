@@ -2,9 +2,9 @@ import { definitions, SettingDef, SettingPageKey, SettingsKey } from '../setting
 import { forOwn, keys, cloneDeep } from 'lodash';
 import { Translations } from '../translations/base/translations';
 
-const pageByKey: any = Object.create(null);
-const keysByPage: any = Object.create(null);
-const defByKey: any = Object.create(null);
+const pageByKey: { [K in SettingsKey]: SettingPageKey } = Object.create(null);
+const keysByPage: { [K in SettingPageKey]: SettingsKey[] } = Object.create(null);
+const defByKey: { [K in SettingsKey]: SettingDef } = Object.create(null);
 const settingKeys: SettingsKey[] = [];
 const dKeysToKey: Dict<SettingsKey> = {};
 const keysToDKeys: Dict<string> = {};
