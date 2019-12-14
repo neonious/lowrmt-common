@@ -20,12 +20,12 @@ export class GermanTranslations implements Translations {
     settings = {
     };
     app = {
-        broken_text1: 'Die neonious one funktioniert nicht richtig. Bitte lade die Seite neu.',
+        broken_text1: 'Dsa Gerät funktioniert nicht richtig. Bitte lade die Seite neu.',
         broken_text2: 'Wir würden gerne von dir hören, so dass wir diese Probleme in zukünftigen Versionen beheben können. Vielen Dank für den Kontakt mit uns!',
-        nojs_text1: 'Die neonious one Software basiert zum großen Teil auf JavaScript und kann daher nur mit einem Browser mit aktiviertem JavaScript benutzt werden. In allen aktuellen Browsern wird JavaScript als sichere und stabile Technologie unterstützt, die dynamische Inhalte auf viele Webseiten darstellen.',
+        nojs_text1: 'Die Software des Gerätes basiert zum großen Teil auf JavaScript und kann daher nur mit einem Browser mit aktiviertem JavaScript benutzt werden. In allen aktuellen Browsern wird JavaScript als sichere und stabile Technologie unterstützt, die dynamische Inhalte auf viele Webseiten darstellen.',
         nojs_text2: 'Bitte ändere deine Browser Einstellungen und lade die Seite neu.',
-        timeout_text1: 'Die Verbindung zu deiner neonious one funktioniert nicht richtig.',
-        timeout_text2: 'Bitte überprüfe ob die neonious one noch läuft, das Kabel (falls verwendet) eingesteckt ist und dein Router noch funktioniert. In der Zwischenzeit probieren wir es periodisch neu.'
+        timeout_text1: 'Die Verbindung zu deinem Gerät funktioniert nicht richtig.',
+        timeout_text2: 'Bitte überprüfe ob das Gerät noch läuft, das Kabel (falls verwendet) eingesteckt ist und dein Router noch funktioniert. In der Zwischenzeit probieren wir es periodisch neu.'
     };
     logoutDialog = {
         cancel: 'Zurück',
@@ -34,10 +34,10 @@ export class GermanTranslations implements Translations {
     };
     login =
         {
-            welcome: 'Willkommen zu neonious one',
+            welcome: 'Willkommen zu low.js',
             sessionExpired: 'Deine Sitzung ist abgelaufen!',
             enterPwToContinue: 'Bitte gebe dein Passwort ein',
-            ifLostPwReset: 'Falls das Passwort verloren wurde, muss die neonious one zurückgesetzt werden.',
+            ifLostPwReset: 'Falls das Passwort verloren wurde, muss das Gerät zurückgesetzt werden.',
             wrongPw: 'Passwort ist falsch',
             login: 'Einloggen'
         };

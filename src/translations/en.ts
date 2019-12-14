@@ -20,12 +20,12 @@ export class EnglishTranslations implements Translations {
     settings = {
     };
     app = {
-        broken_text1: 'The neonious one is not working properly. Please reload.',
+        broken_text1: 'The device is not working properly. Please reload.',
         broken_text2: 'We really would like your feedback, so we can fix these problems in future releases. Thank you for reaching out to us!',
-        nojs_text1: 'The neonious one software relies heavily on JavaScript and thus can only be used when JavaScript is enabled in your browser. In all current browsers JavaScript is implemented as a secure and stable technology with which dynamic content is being served on many websites.',
+        nojs_text1: 'The device software relies heavily on JavaScript and thus can only be used when JavaScript is enabled in your browser. In all current browsers JavaScript is implemented as a secure and stable technology with which dynamic content is being served on many websites.',
         nojs_text2: 'Please change your browser settings and reload this website.',
-        timeout_text1: 'The connection to your neonious one is not working properly.',
-        timeout_text2: 'Please check whether your neonious one is still running, the cable (if applicable) is still plugged in and your router is still running. In the meantime, we will retry periodically.'
+        timeout_text1: 'The connection to your device is not working properly.',
+        timeout_text2: 'Please check whether your device is still running, the cable (if applicable) is still plugged in and your router is still running. In the meantime, we will retry periodically.'
     };
     logoutDialog = {
         cancel: 'Back',
@@ -34,10 +34,10 @@ export class EnglishTranslations implements Translations {
     };
     login =
         {
-            welcome: 'Welcome to neonious one',
+            welcome: 'Welcome to low.js',
             sessionExpired: 'Your session has expired!',
             enterPwToContinue: 'Please enter your password',
-            ifLostPwReset: 'If you lost your password, the neonious one has to be reset.',
+            ifLostPwReset: 'If you lost your password, the device has to be reset.',
             wrongPw: 'Incorrect password',
             login: 'Login'
         };
