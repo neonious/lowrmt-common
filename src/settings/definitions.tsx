@@ -392,33 +392,33 @@ export const definitions = {
             $type:'string',
             label:t => 'spi - Slowest, most compatible. Pins configurable\nsd1line - Uses pins 2, 13, 14, 15, 21\nsd4line - Fastest mode, uses pins 2, 4, 12, 13, 14, 15, 21'
         }as SettingDef,
-        sdcard__pinMISO:{
+        sdcard__pin_miso:{
             $type: 'number',
             label:t => 'Pin number for MISO in SPI mode'
         }as SettingDef,
-        sdcard__pinMOSI:{
+        sdcard__pin_mosi:{
             $type: 'number',
             label:t => 'Pin number for MOSI in SPI mode'
         }as SettingDef,
-        sdcard__pinSCLK:{
+        sdcard__pin_sclk:{
             $type: 'number',
             label:t => 'Pin number for SCLK in SPI mode'
         }as SettingDef, 
-        sdcard__pinCS:{
+        sdcard__pin_cs:{
             $type: 'number',
             label:t => 'Pin number for CS in SPI mode. May be omitted.'
         }as SettingDef, 
-        sdcard__pinCD:{
+        sdcard__pin_cd:{
             allowNull:true,
             $type: 'number',
             label:t => '' // todo setting description
         }as SettingDef, 
-        sdcard__pinWP:{
+        sdcard__pin_wp:{
             allowNull:true,
             $type: 'number',
             label:t => '' // todo setting description
         }as SettingDef,
-        sdcard__clockSpeed:{
+        sdcard__clock_speed:{
             $type: 'number',
             label:t => 'Transfer speed in Hz'
         }as SettingDef,
