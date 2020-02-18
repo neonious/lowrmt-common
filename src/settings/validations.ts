@@ -81,6 +81,9 @@ export const validationDefs = {
     NOT_A_NUMBER: {
         translation: t => 'Must be an integer'
     } as ValidationData,
+    NOT_A_POSITIVE_NUMBER: {
+        translation: t => 'Must be a positive integer'
+    } as ValidationData,
     NOT_A_ESP32_PIN: {
         translation: t => 'Pin is not an ESP32 pin'
     } as ValidationData
