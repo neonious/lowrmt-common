@@ -218,6 +218,12 @@ export const definitions = {
             regex: ipAddressCharsCsv,
             description: t => `You may specify multiple servers, separated by spaces and/or commas.`
         } as SettingDef,
+        network__hostname: {
+            $type: 'string',
+            icon: 'fa icon-server',
+            label: t => 'Host name',
+            description: t => `The host name of the device.`
+        } as SettingDef,
         network__time: {
             $type: 'string',
             icon: 'fa icon-server',
@@ -366,7 +372,12 @@ export const definitions = {
         code__kick_watchdog_event_loop:{
             $type:'boolean',
             label:t => 'Shall the watchdog be reset in the event loop?'
-        } as SettingDef
+        } as SettingDef,
+        code__only_static_files: {
+            $type: 'boolean',
+            description: t => 'If enabled, device will only look for code files in static area (for use with custom firmware images)',
+            label: t => 'Only static code files'
+        } as SettingDef,
     },
     sdcard: {
         sdcard__enabled:{
@@ -406,7 +417,11 @@ export const definitions = {
             allowNull:true,
             $type: 'number',
             label:t => '' // todo setting description
-        }as SettingDef
+        }as SettingDef,
+        sdcard__clockSpeed:{
+            $type: 'number',
+            label:t => 'Transfer speed in Hz'
+        }as SettingDef,
     }
 }
 
