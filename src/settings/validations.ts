@@ -28,7 +28,7 @@ export const validationDefs = {
         translation: t => 'The IP address is not valid'
     } as ValidationData, // later trans
     REQUIRES_NEONIOUS_ONE: {
-        translation: t => 'Ethernet is only supported on neonious one'
+        translation: t => 'Set PHY parameters and reboot before enabling Ethernet'
     } as ValidationData,
     NOT_POSITIVE_INT: {
         translation: t => 'You must enter a positive integer'
