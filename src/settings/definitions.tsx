@@ -185,6 +185,54 @@ export const definitions = {
             label: t => '<No label>'
         } as SettingDef,
 
+        eth__phy: {
+            $type: 'select',
+            label: t => 'PHY chip',
+            values: [
+                {
+                    value: 'LAN8720',
+                    label: t => 'LAN8720'
+                },
+                {
+                    value: 'IP101',
+                    label: t => 'IP101'
+                }
+            ]
+        } as SettingDef,
+        eth__phy_addr:{
+            $type: 'number',
+            label:t => 'PHY chip address'
+        }as SettingDef,
+        eth__pin_reset:{
+            $type: 'number',
+            label:t => 'Pin number for PHY reset'
+        }as SettingDef,
+        eth__pin_power:{
+            $type: 'number',
+            label:t => 'Pin number for PHY power'
+        }as SettingDef,
+        eth__pin_clk_mode: {
+            $type: 'select',
+            label: t => 'Pin number and mode for clock',
+            values: [
+                {
+                    value: '0_in',
+                    label: t => 'GPIO0, 50 Mhz input'
+                },
+                {
+                    value: '0_out',
+                    label: t => 'GPIO0, 50 Mhz output'
+                }
+            ]
+        } as SettingDef,
+        eth__pin_mdc:{
+            $type: 'number',
+            label:t => 'Pin number for MDC'
+        }as SettingDef,
+        eth__pin_mdio:{
+            $type: 'number',
+            label:t => 'Pin number for MDIO'
+        }as SettingDef,
         eth__enabled: {
             $type: 'boolean',
             label: t => 'Enabled'
@@ -206,7 +254,7 @@ export const definitions = {
                     label: t => t.networksettings.dhcp_mode_static
                 }
             ],
-            ...ethEnabled
+            ...ethEnabled,
         } as SettingDef,
         ...getNetworkPartialDef('eth')
     },
