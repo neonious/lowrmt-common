@@ -37,13 +37,12 @@ export class ForbiddenTimeoutHandlingSocketImpl {
         map(json => {
           try {
             const obj = JSON.parse(json);
-
             return obj;
           } catch (e) {
             if (e instanceof SyntaxError) {
               console.error("Original JSON: ", json);
             }
-            throw e;
+            return {};
           }
         })
       )
