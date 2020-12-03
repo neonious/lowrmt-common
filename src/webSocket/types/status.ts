@@ -159,7 +159,8 @@ export namespace Status {
         "flash_left_b",
         "flash_avail_b",
         "network_bs",
-        "ram_left_b"
+        "ram_left_b",
+	"ram_avail_b"
       ];
     }
 
@@ -167,6 +168,7 @@ export namespace Status {
       network_bs?: number;
       cpu_load?: number;
       ram_left_b?: number;
+      ram_avail_b?: number;
       flash_left_b?: number;
       flash_avail_b?: number;
     }
