@@ -1119,9 +1119,22 @@ function getPropType(clazz) {
 }
 
 function getProperty(key, obj) {
-    if (typeof obj === 'object') {
-        const { type } = obj;
+	if(obj === null)
+		return {
+                proptype: 'primitive',
+                key,
+                value: null
+            };
+	if(obj === undefined)
+		return {
+                proptype: 'primitive',
+                key,
+                value: undefined
+            };
 
+    if (typeof obj === 'object') {
+
+        const { type } = obj;
         if (type === 'number') { // stupid dukdebug behavior. normally primitive are handled in else case of this method, but new Date().getTime() triggers this, although it's a number TOO oO
             return {
                 proptype: 'primitive',
