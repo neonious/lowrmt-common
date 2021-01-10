@@ -28,7 +28,6 @@ const pageKeys = keys(keysByPage) as SettingPageKey[];
 type BySettingsKey = Record<SettingsKey, any>;
 
 export function toSettingsStructure(flat: BySettingsKey, page?: SettingPageKey) {
-
     const result = Object.create(null);
     forOwn(flat, (value, key: SettingsKey) => {
         if ((!page || getPage(key) === page)) {
@@ -46,12 +45,16 @@ export function toFlatStructure<TValue>(obj: any): Record<SettingsKey, TValue> {
     const flat: BySettingsKey = Object.create(null);
     forOwn(obj, (subObj, topKey) => {
         forOwn(subObj, (value, subKey) => {
-
             let key = `${topKey}__${subKey}` as SettingsKey;
-            if (!hasKey(key)) {
+            let keyHas = key;
+            if(topKey.substr(0, 3) == "eth")
+                keyHas = `eth__${subKey}` as SettingsKey;
+
+            if (!hasKey(keyHas)) {
                 console.error(`Unknown key ${topKey}.${subKey} for value ${value}, ommiting key/value pair`); 
                 return;
             }
+
             flat[key] = value;
         });
     });
@@ -67,23 +70,106 @@ export function getKeys(page: SettingPageKey) {
 }
 
 export function getType(key: SettingsKey) {
+    if(key.substr(0, 3) == "eth") {
+        let pos = key.indexOf('__');
+        if(pos >= 0)
+            key = ("eth" + key.substr(pos)) as SettingsKey;;
+    }
     return defByKey[key].$type;
 }
 
 export function hasKey(key: SettingsKey) {
+    if(key.substr(0, 3) == "eth") {
+        let pos = key.indexOf('__');
+        if(pos >= 0)
+            key = ("eth" + key.substr(pos)) as SettingsKey;;
+    }
     return key in defByKey;
 }
 
 export function getDef(key: SettingsKey) {
-    return defByKey[key];
+    let newKey = key;
+    if(key.substr(0, 3) == "eth") {
+        let pos = key.indexOf('__');
+        if(pos >= 0) {
+            newKey = ("eth" + key.substr(pos)) as SettingsKey;;
+            let def = defByKey[newKey];
+            if(def.condition) {
+                let keys = def.condition.keys;
+                let newKeys;
+                if(typeof keys == 'string') {
+                    if(keys.substr(0, 3) == "eth")
+                        newKeys = key.substr(0, pos) + keys.substr(3);
+                    else
+                        newKeys = keys;
+                } else {
+                    newKeys = [];
+                    for(let i = 0; i < keys.length; i++) {
+                        if(keys[i].substr(0, 3) == "eth")
+                            newKeys.push(key.substr(0, pos) + keys[i].substr(3));
+                        else
+                            newKeys.push(keys[i]);
+                    }
+                }
+                console.log("NEW KEYS", newKeys);
+                return {
+                    ...def,
+                    condition: {
+                        ...def.condition,
+                        keys: newKeys
+                    }
+                };
+            }
+        }
+    }
+    return defByKey[newKey];
 }
 
 export const getPage = (key: SettingsKey) => {
+    if(key.substr(0, 3) == "eth") {
+        let pos = key.indexOf('__');
+        if(pos >= 0)
+            key = ("eth" + key.substr(pos)) as SettingsKey;;
+    }
     return pageByKey[key]
 };
 
 export function getDefinition(key: SettingsKey) {
-    return defByKey[key];
+    let newKey = key;
+    if(key.substr(0, 3) == "eth") {
+        let pos = key.indexOf('__');
+        if(pos >= 0) {
+            newKey = ("eth" + key.substr(pos)) as SettingsKey;;
+            let def = defByKey[newKey];
+            if(def.condition) {
+                let keys = def.condition.keys;
+                let newKeys;
+                if(typeof keys == 'string') {
+                    if(keys.substr(0, 3) == "eth")
+                        newKeys = key.substr(0, pos) + keys.substr(3);
+                    else
+                        newKeys = keys;
+                } else {
+                    newKeys = [];
+                    for(let i = 0; i < keys.length; i++) {
+                        if(keys[i].substr(0, 3) == "eth")
+                            newKeys.push(key.substr(0, pos) + keys[i].substr(3));
+                        else
+                            newKeys.push(keys[i]);
+                    }
+                }
+                console.log("NEW KEYS", newKeys);
+                return {
+                    ...def,
+                    condition: {
+                        ...def.condition,
+                        keys: newKeys
+                    }
+                };
+            }
+        }
+    }
+    return defByKey[newKey];
 }
 
 export function getSettingDefinitions() {
@@ -99,6 +185,12 @@ export function getDotKeyMapping() {
 }
 
 export function validateAll(key: SettingsKey, value: any, translations: Translations): string | true {
+    if(key.substr(0, 3) == "eth") {
+        let pos = key.indexOf('__');
+        if(pos >= 0)
+            key = ("eth" + key.substr(pos)) as SettingsKey;;
+    }
+
     const def = getDef(key);
     const { validate, allowNull } = def;
     if (validate) {
@@ -171,5 +263,10 @@ export function fillFlatStructureWithDefaults(flatSettings: Dict<any>) {
 }
 
 export function getDotKeyFromKey(key: string): string {
+    if(key.substr(0, 3) == "eth") {
+        let pos = key.indexOf('__');
+        if(pos >= 0)
+            key = ("eth" + key.substr(pos)) as SettingsKey;;
+    }
     return keysToDKeys[key];
 }
