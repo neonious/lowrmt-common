@@ -46,11 +46,7 @@ export function toFlatStructure<TValue>(obj: any): Record<SettingsKey, TValue> {
     forOwn(obj, (subObj, topKey) => {
         forOwn(subObj, (value, subKey) => {
             let key = `${topKey}__${subKey}` as SettingsKey;
-            let keyHas = key;
-            if(topKey.substr(0, 3) == "eth")
-                keyHas = `eth__${subKey}` as SettingsKey;
-
-            if (!hasKey(keyHas)) {
+            if (!hasKey(key)) {
                 console.error(`Unknown key ${topKey}.${subKey} for value ${value}, ommiting key/value pair`); 
                 return;
             }
@@ -87,12 +83,23 @@ export function hasKey(key: SettingsKey) {
     return key in defByKey;
 }
 
+let newDevs = {} as any;
 export function getDef(key: SettingsKey) {
+    if(newDevs[key])
+        return newDevs[key];
+
     let newKey = key;
     if(key.substr(0, 3) == "eth") {
         let pos = key.indexOf('__');
         if(pos >= 0) {
+            const keyParts = key.split('__');
+            const dotKey = `${keyParts[0]}.${keyParts[1]}`;
+            dKeysToKey[dotKey] = key;
+            keysToDKeys[key] = dotKey;
+
             newKey = ("eth" + key.substr(pos)) as SettingsKey;;
+            keysByPage[pageByKey[newKey]].push(key);
+
             let def = defByKey[newKey];
             if(def.condition) {
                 let keys = def.condition.keys;
@@ -111,18 +118,21 @@ export function getDef(key: SettingsKey) {
                             newKeys.push(keys[i]);
                     }
                 }
-                console.log("NEW KEYS", newKeys);
-                return {
+                newDevs[key] = {
                     ...def,
                     condition: {
                         ...def.condition,
                         keys: newKeys
                     }
-                };
-            }
+                } as any;
+            } else
+                newDevs[key] = {
+                    ...def
+                } as any;
+            return newDevs[key];
         }
     }
-    return defByKey[newKey];
+    return defByKey[key];
 }
 
 export const getPage = (key: SettingsKey) => {
@@ -135,11 +145,21 @@ export const getPage = (key: SettingsKey) => {
 };
 
 export function getDefinition(key: SettingsKey) {
+    if(newDevs[key])
+        return newDevs[key];
+
     let newKey = key;
     if(key.substr(0, 3) == "eth") {
         let pos = key.indexOf('__');
         if(pos >= 0) {
+            const keyParts = key.split('__');
+            const dotKey = `${keyParts[0]}.${keyParts[1]}`;
+            dKeysToKey[dotKey] = key;
+            keysToDKeys[key] = dotKey;
+
             newKey = ("eth" + key.substr(pos)) as SettingsKey;;
+            keysByPage[pageByKey[newKey]].push(key);
+
             let def = defByKey[newKey];
             if(def.condition) {
                 let keys = def.condition.keys;
@@ -158,18 +178,21 @@ export function getDefinition(key: SettingsKey) {
                             newKeys.push(keys[i]);
                     }
                 }
-                console.log("NEW KEYS", newKeys);
-                return {
+                newDevs[key] = {
                     ...def,
                     condition: {
                         ...def.condition,
                         keys: newKeys
                     }
-                };
-            }
+                } as any;
+            } else
+                newDevs[key] = {
+                    ...def
+                } as any;
+            return newDevs[key];
         }
     }
-    return defByKey[newKey];
+    return defByKey[key];
 }
 
 export function getSettingDefinitions() {
@@ -263,10 +286,7 @@ export function fillFlatStructureWithDefaults(flatSettings: Dict<any>) {
 }
 
 export function getDotKeyFromKey(key: string): string {
-    if(key.substr(0, 3) == "eth") {
-        let pos = key.indexOf('__');
-        if(pos >= 0)
-            key = ("eth" + key.substr(pos)) as SettingsKey;;
-    }
-    return keysToDKeys[key];
+    const keyParts = key.split('__');
+    const dotKey = `${keyParts[0]}.${keyParts[1]}`;
+    return dotKey;
 }
