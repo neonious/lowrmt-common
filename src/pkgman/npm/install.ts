@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as execa from 'execa';
 import { mkdirp, readFile } from 'fs-extra';
 import { mapKeys, toPairs } from 'lodash';
@@ -40,7 +41,7 @@ export async function getOptimizedModules({
       version,
       resolve(path, 'node_modules', relPath)
     );
-    Object.assign(result, mapKeys(optimizedDep as any, (v, k) => join(relPath, k)));
+    Object.assign(result, mapKeys(optimizedDep as any, (v, k) => join(relPath as any, k as any)));
   }
   return result;
 }
